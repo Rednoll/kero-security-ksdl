@@ -1,0 +1,254 @@
+buildscript {
+	
+	repositories {
+	
+		jcenter()
+	}
+	
+	dependencies {
+		
+		classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.+'
+		classpath 'com.palantir.gradle.gitversion:gradle-git-version:0.12.+'
+	}
+}
+
+plugins {
+
+	id 'java-library'
+	id 'jacoco'
+	id 'maven-publish'
+	id 'signing'
+}
+
+apply plugin: 'com.jfrog.bintray'
+apply plugin: 'com.palantir.git-version'
+
+ext {
+	
+	git = 'https://github.com/Rednoll/kero-security.git'
+	vcsTag = versionDetails().lastTag
+}
+
+ext.determineVersion = {
+
+	def details = versionDetails()
+	
+	if(details.lastTag ==~ /release@[0-9]+\.[0-9]+\.[0-9]+/) {
+	
+		if(details.commitDistance == 0) {
+			
+			return details.lastTag - ~/^(.*@)|.dirty$/;
+		}
+		else {
+		
+			def snapVersion = details.lastTag - ~/^(.*@)|.dirty$/;
+
+			snapVersion = (snapVersion - ~/\..*$/) + "." + (snapVersion.replaceAll(/^[0-9]+\.|\.[0-9]+$/, "").toInteger() + 1) + ".0"
+
+			snapVersion += "-SNAPSHOT"
+			
+			return snapVersion;
+		}
+	}
+	else if(details.lastTag ==~ /.*@[0-9]+\.[0-9]+\.[0-9]+/) {
+	
+		return details.lastTag - ~/^(.*@)|.dirty$/ + "-SNAPSHOT";
+	}
+
+	throw new InvalidUserDataException("Can't determine version! Last commit not match .*@[0-9]+\\.[0-9]+\\.[0-9]+")
+}
+
+sourceCompatibility = '1.8'
+
+group = 'com.github.rednoll'
+version = determineVersion()
+description = 'Kero-Security-KSDL - KSDL integration for Kero-Security'
+
+repositories {
+
+	mavenCentral()
+	
+	maven {
+
+		url "https://oss.sonatype.org/content/repositories/snapshots"
+	}
+}
+
+dependencies {
+
+	implementation 'com.github.rednoll:kero-security:0.2.0-SNAPSHOT'
+
+	implementation 'org.slf4j:slf4j-api:1.7.25'
+	
+	testImplementation 'org.junit.jupiter:junit-jupiter-api:5.3.1'
+	testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.3.1'
+	testImplementation 'org.junit.platform:junit-platform-launcher:1.5.2'
+	
+	testImplementation 'org.slf4j:slf4j-log4j12:1.7.25'   
+	testImplementation 'log4j:log4j:1.2.17'
+	
+	testImplementation 'org.mockito:mockito-all:1.10.19'
+	
+	testImplementation 'com.google.jimfs:jimfs:1.1'
+}
+
+java {
+
+    withJavadocJar()
+    withSourcesJar()
+}
+
+javadoc {
+
+	if(JavaVersion.current().isJava9Compatible()) {
+		
+		options.addBooleanOption('html5', true)
+	}
+}
+
+test {
+
+	useJUnitPlatform()
+	finalizedBy jacocoTestReport
+}
+
+jacocoTestReport {
+
+    dependsOn test
+	
+	reports {
+	
+        xml.enabled true
+    }
+}
+
+def pomConfig = {
+
+	licenses {
+		
+		license {
+			
+			name 'The Apache License, Version 2.0'
+			url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+			distribution 'repo'
+		}
+		
+		license {
+			
+			name 'The MIT License (MIT)'
+			url 'http://opensource.org/licenses/MIT'
+			distribution 'repo'
+		}
+	}
+	
+	developers {
+		
+		developer {
+		
+			name 'Stepan Glumov (Kerovazzky)'
+			email 'rednoll12@gmail.com'
+			organization 'Rednoll (Kerovazzky)'
+			organizationUrl 'https://github.com/Rednoll'
+		}
+	}
+	
+	scm {
+		
+		url project.git
+	}
+}
+
+publishing {
+
+	publications {
+		
+		mavenJava(MavenPublication) {
+			
+			from components.java
+
+			pom.withXml {
+				
+				def root = asNode()
+					root.appendNode('name', project.name)
+					root.appendNode('description', project.description)
+					root.appendNode('url', project.git)
+				
+				root.children().last() + pomConfig
+			}
+		}
+	}
+	
+	repositories {
+		
+		if(project.version.endsWith("-SNAPSHOT")) {
+
+			maven {
+
+				url "https://oss.sonatype.org/content/repositories/snapshots"
+
+				credentials {
+					
+					username System.getenv('OSS_USER')
+					password System.getenv('OSS_PASS')
+				}
+			}
+		}
+	}
+}
+
+bintray {
+
+	user = 'kerovazzky'
+	key = System.getenv('BINTRAY_TOKEN')
+	
+	configurations = ['archives']
+	publications = ['mavenJava']
+	
+	pkg {
+		
+		repo = 'Kero-Security'
+		name = project.name
+		licenses = ['Apache-2.0']
+		vcsUrl = project.git
+	
+		version {
+	
+			name = project.version
+			vcsTag = project.vcsTag
+			released  = new Date()
+			
+			gpg {
+			
+				sign = true
+				passphrase = System.getenv('KEY_PASS')
+            }
+			
+			mavenCentralSync {
+				
+				sync = true
+				user = System.getenv('OSS_USER')
+				password = System.getenv('OSS_PASS')
+			}
+		}
+	}
+}
+
+signing {
+
+	if(version.endsWith("-SNAPSHOT")) {
+		
+		sign publishing.publications.mavenJava
+	}
+}
+
+task deploy() {
+	
+	if(version.endsWith("-SNAPSHOT")) {
+		
+		dependsOn publish
+	}
+	else {
+		
+		dependsOn bintrayUpload
+	}
+}
