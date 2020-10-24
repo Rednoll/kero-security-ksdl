@@ -14,12 +14,12 @@ public class KsdlAgentImpl implements KsdlAgent {
 	
 	private CompositeProvider mainProvider;
 	
-	public KsdlAgentImpl(KeroAccessAgent agent) {
+	KsdlAgentImpl(KeroAccessAgent agent) {
 		this(agent, new BaseCompositeProvider());
 		
 	}
 	
-	public KsdlAgentImpl(KeroAccessAgent accessAgent, CompositeProvider mainProvider) {
+	KsdlAgentImpl(KeroAccessAgent accessAgent, CompositeProvider mainProvider) {
 		
 		this.accessAgent = accessAgent;
 		this.mainProvider = mainProvider;
