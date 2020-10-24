@@ -1,11 +1,11 @@
-package com.kero.security.lang.provider.resource;
+package com.kero.security.ksdl.provider.resource;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.StringJoiner;
 
-import com.kero.security.lang.provider.resource.exception.FileResourceIOException;
+import com.kero.security.ksdl.provider.resource.exception.FileResourceIOException;
 
 public class FileResource implements KsdlTextResource {
 

@@ -3,6 +3,8 @@ package com.kero.security.lang.provider;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import com.kero.security.ksdl.provider.KsdlProvider;
+import com.kero.security.ksdl.provider.ProviderCacheWrap;
 import com.kero.security.lang.collections.RootNodeList;
 
 public class CachedProviderTest {

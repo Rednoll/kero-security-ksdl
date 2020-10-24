@@ -1,4 +1,4 @@
-package com.kero.security.lang.provider.resource;
+package com.kero.security.ksdl.provider.resource;
 
 public interface KsdlTextResourceWrap extends KsdlTextResource {
 

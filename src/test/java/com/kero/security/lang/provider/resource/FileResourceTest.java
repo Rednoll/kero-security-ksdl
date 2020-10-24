@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 
 import com.google.common.jimfs.Configuration;
 import com.google.common.jimfs.Jimfs;
+import com.kero.security.ksdl.provider.resource.FileResource;
 
 public class FileResourceTest {
 

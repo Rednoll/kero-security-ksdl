@@ -6,9 +6,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import com.kero.security.ksdl.provider.TextualProvider;
+import com.kero.security.ksdl.provider.resource.KsdlTextResource;
 import com.kero.security.lang.collections.RootNodeList;
 import com.kero.security.lang.nodes.SchemeNode;
-import com.kero.security.lang.provider.resource.KsdlTextResource;
 
 public class TextualProviderTest {
 

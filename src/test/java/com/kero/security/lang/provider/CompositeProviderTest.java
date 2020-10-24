@@ -8,6 +8,9 @@ import java.util.Set;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import com.kero.security.ksdl.provider.BaseCompositeProvider;
+import com.kero.security.ksdl.provider.CompositeProvider;
+import com.kero.security.ksdl.provider.KsdlProvider;
 import com.kero.security.lang.collections.RootNodeList;
 import com.kero.security.lang.nodes.KsdlRootNode;
 

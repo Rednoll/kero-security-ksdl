@@ -1,4 +1,4 @@
-package com.kero.security.lang.provider;
+package com.kero.security.ksdl.provider;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -35,17 +35,5 @@ public class BaseCompositeProvider implements CompositeProvider {
 		}
 		
 		return result;
-	}
-
-	@Override
-	public void preloadResource() {
-		
-		for(KsdlProvider source : sources) {
-			
-			if(source instanceof PreloadableProvider) {
-				
-				((PreloadableProvider) source).preloadResource();
-			}
-		}
 	}
 }

@@ -1,13 +1,12 @@
-package com.kero.security.lang.provider;
+package com.kero.security.ksdl.provider;
 
+import com.kero.security.ksdl.provider.resource.KsdlTextResource;
 import com.kero.security.lang.KsdlLexer;
 import com.kero.security.lang.KsdlParser;
 import com.kero.security.lang.collections.RootNodeList;
 import com.kero.security.lang.collections.TokenSequence;
-import com.kero.security.lang.provider.resource.KsdlTextResource;
-import com.kero.security.lang.provider.resource.TextResourceCacheWrap;
 
-public class TextualProvider extends KsdlProviderBase implements PreloadableProvider {
+public class TextualProvider extends KsdlProviderBase {
 
 	private KsdlTextResource resource;
 	
@@ -25,16 +24,5 @@ public class TextualProvider extends KsdlProviderBase implements PreloadableProv
 		RootNodeList roots = KsdlParser.getInstance().parse(tokens);
 		
 		return roots;
-	}
-
-	@Override
-	public void preloadResource() {
-		
-		if(!KsdlTextResource.hasWrap(this.resource, TextResourceCacheWrap.class)) {
-			
-			this.resource = KsdlTextResource.addCacheWrap(this.resource);
-		}
-		
-		this.resource.getRawText(); //Trigger
 	}
 }
