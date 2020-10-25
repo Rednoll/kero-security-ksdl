@@ -18,6 +18,6 @@ public class RoleLexem extends KsdlLexemBase<RoleToken> {
 		
 		String roleName = data.substring(1);
 		
-		return new RoleToken(accessible, roleName);
+		return new RoleToken(roleName, accessible);
 	}
 }

@@ -25,7 +25,7 @@ apply plugin: 'com.palantir.git-version'
 
 ext {
 	
-	git = 'https://github.com/Rednoll/kero-security.git'
+	git = 'https://github.com/Rednoll/kero-security-ksdl.git'
 	vcsTag = versionDetails().lastTag
 }
 

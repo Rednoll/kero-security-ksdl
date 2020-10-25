@@ -36,7 +36,7 @@ public class SchemeParser extends KsdlNodeParserBase<SchemeNode> implements Ksdl
 		
 		return new SchemeNode(typeName, defaultRule, props);
 	}
-
+	
 	@Override
 	public PropertyNode parseBlockUnit(TokenSequence tokens) {
 		

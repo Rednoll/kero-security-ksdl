@@ -1,13 +1,13 @@
 package com.kero.security.lang.parsers;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
+import java.util.stream.Collectors;
 
 import com.kero.security.lang.collections.TokenSequence;
 import com.kero.security.lang.nodes.DefaultAccessNode;
 import com.kero.security.lang.nodes.PropertyNode;
+import com.kero.security.lang.nodes.RoleNode;
 import com.kero.security.lang.nodes.metaline.PropertyMetalineBase;
 import com.kero.security.lang.parsers.metaline.HasMetalines;
 import com.kero.security.lang.parsers.metaline.MetalineParser;
@@ -31,22 +31,14 @@ public class PropertyParser extends KsdlNodeParserBase<PropertyNode> implements 
 		
 		DefaultAccessToken defaultRuleToken = tokens.tryGetOrDefault(DefaultAccessToken.EMPTY);
 		
-		Set<String> grantRoles = new HashSet<>();
-		Set<String> denyRoles = new HashSet<>();
-		
 		List<RoleToken> roles = this.parseBlock(tokens);
 		
-		for(RoleToken role : roles) {
-			
-			if(role.getAccessible()) {
+		List<RoleNode> roleRules = new ArrayList<>();
+		
+			for(RoleToken role : roles) {
 				
-				grantRoles.add(role.getRoleName());
+				roleRules.add(role.toNode());
 			}
-			else {
-				
-				denyRoles.add(role.getRoleName());
-			}
-		}
 		
 		List<PropertyMetalineBase> metalines = this.parseMetalines(tokens);
 		
@@ -54,7 +46,7 @@ public class PropertyParser extends KsdlNodeParserBase<PropertyNode> implements 
 		
 		DefaultAccessNode defaultRule = defaultRuleToken.toNode();
 
-		return new PropertyNode(name, defaultRule, grantRoles, denyRoles, metalines);
+		return new PropertyNode(name, defaultRule, roleRules, metalines);
 	}
 
 	@Override

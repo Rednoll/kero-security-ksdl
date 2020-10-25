@@ -33,8 +33,8 @@ public class KsdlParserTest {
 			seq.add(new NameToken("text"));
 			seq.add(DefaultAccessToken.GRANT);
 			seq.add(KeyWordToken.OPEN_BLOCK);
-			seq.add(new RoleToken(true, "OWNER"));
-			seq.add(new RoleToken(false, "FRIEND"));
+			seq.add(new RoleToken("OWNER", true));
+			seq.add(new RoleToken("FRIEND", false));
 			seq.add(KeyWordToken.CLOSE_BLOCK);
 			seq.add(KeyWordToken.METALINE);
 			seq.add(new NameToken("propagation"));

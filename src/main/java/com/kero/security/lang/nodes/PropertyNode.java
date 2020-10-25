@@ -14,18 +14,16 @@ public class PropertyNode extends KsdlNodeBase {
 	private String name;
 	private DefaultAccessNode defaultAccess;
 	
-	private Set<String> grantRoles;
-	private Set<String> denyRoles;
+	private List<RoleNode> roleRules;
 	
 	private List<PropertyMetalineBase> metalines;
 	
-	public PropertyNode(String name, DefaultAccessNode defaultAccess, Set<String> grantRoles, Set<String> denyRoles, List<PropertyMetalineBase> metalines) {
+	public PropertyNode(String name, DefaultAccessNode defaultAccess, List<RoleNode> roleRules, List<PropertyMetalineBase> metalines) {
 		
 		this.name = name;
 		this.defaultAccess = defaultAccess;
 		
-		this.grantRoles = grantRoles;
-		this.denyRoles = denyRoles;
+		this.roleRules = roleRules;
 		this.metalines = metalines;
 	}
 
@@ -38,13 +36,9 @@ public class PropertyNode extends KsdlNodeBase {
 
 			defaultAccess.interpret(manager, prop);
 			
-			prop.grantRoles(roleStorage.getOrCreate(this.grantRoles));
-			prop.denyRoles(roleStorage.getOrCreate(this.denyRoles));
+			roleRules.forEach(rule -> rule.interpret(prop, roleStorage));
 			
-			for(PropertyMetalineBase metaline : metalines) {
-				
-				metaline.interpret(manager, prop);
-			}
+			metalines.forEach(metaline -> metaline.interpret(manager, prop));
 	}
 	
 	public List<PropertyMetalineBase> getMetalines() {
@@ -52,14 +46,9 @@ public class PropertyNode extends KsdlNodeBase {
 		return this.metalines;
 	}
 	
-	public Set<String> getGrantRoles() {
+	public List<RoleNode> getRoleRules() {
 		
-		return this.grantRoles;
-	}
-	
-	public Set<String> getDenyRoles() {
-	
-		return this.denyRoles;
+		return this.roleRules;
 	}
 	
 	public DefaultAccessNode getDefaultAccess() {

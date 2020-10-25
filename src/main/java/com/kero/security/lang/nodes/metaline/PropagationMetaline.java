@@ -5,6 +5,9 @@ import java.util.Map;
 import com.kero.security.core.agent.KeroAccessAgent;
 import com.kero.security.core.property.Property;
 import com.kero.security.core.role.Role;
+import com.kero.security.lang.collections.TokenSequence;
+import com.kero.security.lang.tokens.KeyWordToken;
+import com.kero.security.lang.tokens.NameToken;
 
 public class PropagationMetaline extends PropertyMetalineBase {
 
