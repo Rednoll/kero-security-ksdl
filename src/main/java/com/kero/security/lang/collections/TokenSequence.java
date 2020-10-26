@@ -1,5 +1,6 @@
 package com.kero.security.lang.collections;
 
+import java.util.Arrays;
 import java.util.LinkedList;
 
 import com.kero.security.lang.tokens.KsdlToken;
@@ -16,6 +17,12 @@ public class TokenSequence extends LinkedList<KsdlToken> {
 	public TokenSequence(TokenSequence seq) {
 		super(seq);
 		
+	}
+	
+	public TokenSequence(KsdlToken... tokens) {
+		this();
+		
+		this.addAll(Arrays.asList(tokens));
 	}
 	
 	public <T extends KsdlToken> T tryGetOrDefault(T def) {
