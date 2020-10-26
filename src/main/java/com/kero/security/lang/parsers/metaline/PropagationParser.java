@@ -3,13 +3,14 @@ package com.kero.security.lang.parsers.metaline;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.kero.security.core.property.Property;
 import com.kero.security.lang.collections.TokenSequence;
 import com.kero.security.lang.nodes.metaline.PropagationMetaline;
 import com.kero.security.lang.parsers.exceptions.KsdlParseException;
 import com.kero.security.lang.tokens.KeyWordToken;
 import com.kero.security.lang.tokens.NameToken;
 
-public class PropagationParser extends MetalineParserBase<PropagationMetaline> {
+public class PropagationParser extends MetalineParserBase<Property, PropagationMetaline> {
 	
 	public PropagationParser() {
 		super("propagation");
@@ -25,6 +26,19 @@ public class PropagationParser extends MetalineParserBase<PropagationMetaline> {
 		if(!tokens.isToken(2, KeyWordToken.OPEN_BLOCK)) return false;
 		
 		return true;
+	}
+	
+	@Override
+	public PropagationMetaline parse(Property property) {
+	
+		Map<String, String> propagationMap = new HashMap<>();
+		
+		property.getLocalRolesPropagation().forEach((from, to)-> {
+			
+			propagationMap.put(from.getName(), to.getName());
+		});
+		
+		return new PropagationMetaline(propagationMap);
 	}
 	
 	@Override

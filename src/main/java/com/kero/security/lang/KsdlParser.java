@@ -3,6 +3,7 @@ package com.kero.security.lang;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.kero.security.core.agent.KeroAccessAgent;
 import com.kero.security.lang.collections.RootNodeList;
 import com.kero.security.lang.collections.TokenSequence;
 import com.kero.security.lang.nodes.KsdlRootNode;
@@ -13,12 +14,21 @@ public class KsdlParser {
 
 	private static final KsdlParser INSTANCE = new KsdlParser();
 	
-	protected List<KsdlRootNodeParser<? extends KsdlRootNode>> parsers;
+	protected List<KsdlRootNodeParser<?, ? extends KsdlRootNode>> parsers;
 	
 	private KsdlParser() {
 		
 		this.parsers = new ArrayList<>();
 			parsers.add(new SchemeParser());
+	}
+	
+	public RootNodeList parse(KeroAccessAgent agent) {
+		
+		RootNodeList result = new RootNodeList();
+		
+			parsers.forEach(parser -> result.add(parser.parse(agent))); 
+		
+		return result;
 	}
 	
 	public RootNodeList parse(TokenSequence tokensArg) {
@@ -29,7 +39,7 @@ public class KsdlParser {
 		
 		c2: while(!tokens.isEmpty()) {
 			
-			for(KsdlRootNodeParser<? extends KsdlRootNode> parser : this.parsers) {
+			for(KsdlRootNodeParser<?, ? extends KsdlRootNode> parser : this.parsers) {
 				
 				if(parser.isMatch(tokens)) {
 					

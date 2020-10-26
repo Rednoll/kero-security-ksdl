@@ -20,6 +20,21 @@ public class RootNodeListTest {
 		assertEquals(list.getAllOf(TestRootNode2.class).size(), 1);
 	}
 	
-	public static class TestRootNode1 implements KsdlRootNode {}
-	public static class TestRootNode2 implements KsdlRootNode {}
+	public static class TestRootNode1 implements KsdlRootNode {
+
+		@Override
+		public TokenSequence tokenize() {
+			
+			return null;
+		}
+	}
+	
+	public static class TestRootNode2 implements KsdlRootNode {
+		
+		@Override
+		public TokenSequence tokenize() {
+			
+			return null;
+		}
+	}
 }

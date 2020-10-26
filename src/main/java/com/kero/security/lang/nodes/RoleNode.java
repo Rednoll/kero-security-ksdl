@@ -1,8 +1,11 @@
 package com.kero.security.lang.nodes;
 
+import java.util.Objects;
+
 import com.kero.security.core.access.Access;
 import com.kero.security.core.property.Property;
 import com.kero.security.core.role.storage.RoleStorage;
+import com.kero.security.lang.collections.TokenSequence;
 import com.kero.security.lang.tokens.RoleToken;
 
 public class RoleNode extends KsdlNodeBase {
@@ -16,14 +19,31 @@ public class RoleNode extends KsdlNodeBase {
 		this.access = access;
 	}
 	
-	public RoleToken toToken() {
+	@Override
+	public int hashCode() {
+		return Objects.hash(access, name);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		RoleNode other = (RoleNode) obj;
+		return access == other.access && Objects.equals(name, other.name);
+	}
+
+	public TokenSequence tokenize() {
 		
-		return new RoleToken(this.name, access == Access.GRANT);
+		return new TokenSequence(new RoleToken(this.name, access == Access.GRANT));
 	}
 	
 	public void interpret(Property prop, RoleStorage roleStorage) {
 		
-		if(access == Access.GRANT) {
+		if(this.access == Access.GRANT) {
 		
 			prop.grantRole(roleStorage.getOrCreate(name));
 		}
@@ -31,7 +51,9 @@ public class RoleNode extends KsdlNodeBase {
 			
 			prop.denyRole(roleStorage.getOrCreate(name));
 		}
+		else {
 		
-		throw new RuntimeException("Can't interpret RoleRule with Access: "+access);
+			throw new RuntimeException("Can't interpret RoleRule with Access: "+access);
+		}
 	}
 }

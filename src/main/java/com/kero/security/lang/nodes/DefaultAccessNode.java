@@ -46,4 +46,20 @@ public enum DefaultAccessNode implements KsdlNode {
 	};
 
 	public abstract void interpret(KeroAccessAgent manager, DefaultAccessOwner prop);
+	
+	public static DefaultAccessNode fromAccess(Access access) {
+
+		if(access == Access.GRANT) {
+			
+			return DefaultAccessNode.GRANT;
+		}
+		else if(access == Access.DENY) {
+			
+			return DefaultAccessNode.DENY;
+		}
+		else {
+			
+			return DefaultAccessNode.EMPTY;
+		}
+	}
 }

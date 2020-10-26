@@ -1,7 +1,11 @@
 package com.kero.security.lang.parsers;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import com.kero.security.core.agent.KeroAccessAgent;
+import com.kero.security.core.scheme.AccessScheme;
+import com.kero.security.lang.collections.RootNodeList;
 import com.kero.security.lang.collections.TokenSequence;
 import com.kero.security.lang.nodes.DefaultAccessNode;
 import com.kero.security.lang.nodes.PropertyNode;
@@ -10,7 +14,7 @@ import com.kero.security.lang.tokens.DefaultAccessToken;
 import com.kero.security.lang.tokens.KeyWordToken;
 import com.kero.security.lang.tokens.NameToken;
 
-public class SchemeParser extends KsdlNodeParserBase<SchemeNode> implements KsdlRootNodeParser<SchemeNode>, HasBlock<PropertyNode> {
+public class SchemeParser extends KsdlNodeParserBase<AccessScheme, SchemeNode> implements KsdlRootNodeParser<AccessScheme, SchemeNode>, HasBlock<PropertyNode> {
 
 	private PropertyParser propertyParser = new PropertyParser();
 	
@@ -20,6 +24,29 @@ public class SchemeParser extends KsdlNodeParserBase<SchemeNode> implements Ksdl
 		if(!tokens.isToken(1, NameToken.class)) return false;
 		
 		return true;
+	}
+	
+	public RootNodeList parse(KeroAccessAgent agent) {
+		
+		RootNodeList result = new RootNodeList();
+		
+			agent.getSchemeStorage().values().forEach(scheme -> 	
+				result.add(this.parse(scheme))
+			);
+	
+		return result;
+	}
+	
+	public SchemeNode parse(AccessScheme scheme) {
+		
+		String typeName = scheme.getName();
+		DefaultAccessNode defaultRule = DefaultAccessNode.fromAccess(scheme.getDefaultAccess());
+		
+		List<PropertyNode> props = new ArrayList<>();
+		
+			scheme.getLocalProperties().forEach(prop -> props.add(propertyParser.parse(prop)));
+		
+		return new SchemeNode(typeName, defaultRule, props);
 	}
 	
 	public SchemeNode parse(TokenSequence tokens) {

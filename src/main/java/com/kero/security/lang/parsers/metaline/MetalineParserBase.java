@@ -6,7 +6,7 @@ import com.kero.security.lang.parsers.KsdlNodeParserBase;
 import com.kero.security.lang.tokens.KeyWordToken;
 import com.kero.security.lang.tokens.NameToken;
 
-public abstract class MetalineParserBase<T extends MetalineNode> extends KsdlNodeParserBase<T> implements MetalineParser<T> {
+public abstract class MetalineParserBase<S, T extends MetalineNode> extends KsdlNodeParserBase<S, T> implements MetalineParser<T> {
 
 	protected String name;
 	

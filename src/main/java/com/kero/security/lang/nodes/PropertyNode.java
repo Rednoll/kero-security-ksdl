@@ -1,13 +1,15 @@
 package com.kero.security.lang.nodes;
 
 import java.util.List;
-import java.util.Set;
 
 import com.kero.security.core.agent.KeroAccessAgent;
 import com.kero.security.core.property.Property;
 import com.kero.security.core.role.storage.RoleStorage;
 import com.kero.security.core.scheme.AccessScheme;
+import com.kero.security.lang.collections.TokenSequence;
 import com.kero.security.lang.nodes.metaline.PropertyMetalineBase;
+import com.kero.security.lang.tokens.KeyWordToken;
+import com.kero.security.lang.tokens.NameToken;
 
 public class PropertyNode extends KsdlNodeBase {
 
@@ -27,6 +29,26 @@ public class PropertyNode extends KsdlNodeBase {
 		this.metalines = metalines;
 	}
 
+	public TokenSequence tokenize() {
+		
+		TokenSequence seq = new TokenSequence();
+			seq.add(new NameToken(this.getName()));
+			seq.add(this.getDefaultAccess().tokenize());
+			
+			if(this.getRoleRules().size() > 0) {
+				
+				seq.add(KeyWordToken.OPEN_BLOCK);
+				
+				this.getRoleRules().forEach(ruleNode -> seq.add(ruleNode.tokenize()));
+				
+				seq.add(KeyWordToken.CLOSE_BLOCK);
+			}
+			
+			this.getMetalines().forEach(line -> seq.add(line.tokenize()));
+			
+		return seq;
+	}
+	
 	public void interpret(AccessScheme scheme) {
 
 		KeroAccessAgent manager = scheme.getAgent();

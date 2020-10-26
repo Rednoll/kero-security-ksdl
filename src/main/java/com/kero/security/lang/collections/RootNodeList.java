@@ -11,6 +11,11 @@ public class RootNodeList extends ArrayList<KsdlRootNode> {
 
 	private static final long serialVersionUID = 1L;
 
+	public boolean add(RootNodeList list) {
+		
+		return this.addAll(list);
+	}
+	
 	public SchemeNodeMap getSchemeNodes() {
 		
 		SchemeNodeMap result = new SchemeNodeMap();

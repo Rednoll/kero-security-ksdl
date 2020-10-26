@@ -5,6 +5,9 @@ import java.util.List;
 
 import com.kero.security.core.agent.KeroAccessAgent;
 import com.kero.security.core.scheme.AccessScheme;
+import com.kero.security.lang.collections.TokenSequence;
+import com.kero.security.lang.tokens.KeyWordToken;
+import com.kero.security.lang.tokens.NameToken;
 
 public class SchemeNode extends KsdlNodeBase implements KsdlRootNode {
 
@@ -21,6 +24,26 @@ public class SchemeNode extends KsdlNodeBase implements KsdlRootNode {
 		this.name = name;
 		this.defaultAccess = defaultAccess;
 		this.properties = properties;
+	}
+	
+	@Override
+	public TokenSequence tokenize() {
+		
+		TokenSequence seq = new TokenSequence();
+			seq.add(KeyWordToken.SCHEME);
+			seq.add(new NameToken(this.name));
+			seq.add(this.defaultAccess.tokenize());
+			
+			if(this.properties.size() > 0) {
+				
+				seq.add(KeyWordToken.OPEN_BLOCK);
+				
+				this.properties.forEach(prop -> seq.add(prop.tokenize()));
+				
+				seq.add(KeyWordToken.CLOSE_BLOCK);
+			}
+			
+		return seq;
 	}
 	
 	public void interpret(KeroAccessAgent manager) {

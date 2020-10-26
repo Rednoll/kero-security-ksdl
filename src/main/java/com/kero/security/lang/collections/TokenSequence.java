@@ -25,6 +25,11 @@ public class TokenSequence extends LinkedList<KsdlToken> {
 		this.addAll(Arrays.asList(tokens));
 	}
 	
+	public boolean add(TokenSequence seq) {
+		
+		return this.addAll(seq);
+	}
+	
 	public <T extends KsdlToken> T tryGetOrDefault(T def) {
 		
 		return tryGetOrDefault((Class<T>) def.getClass(), def);

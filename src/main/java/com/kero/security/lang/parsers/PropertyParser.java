@@ -2,8 +2,9 @@ package com.kero.security.lang.parsers;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
+import com.kero.security.core.access.Access;
+import com.kero.security.core.property.Property;
 import com.kero.security.lang.collections.TokenSequence;
 import com.kero.security.lang.nodes.DefaultAccessNode;
 import com.kero.security.lang.nodes.PropertyNode;
@@ -16,13 +17,35 @@ import com.kero.security.lang.tokens.DefaultAccessToken;
 import com.kero.security.lang.tokens.NameToken;
 import com.kero.security.lang.tokens.RoleToken;
 
-public class PropertyParser extends KsdlNodeParserBase<PropertyNode> implements HasBlock<RoleToken>, HasMetalines<PropertyMetalineBase> {
+public class PropertyParser extends KsdlNodeParserBase<Property, PropertyNode> implements HasBlock<RoleToken>, HasMetalines<PropertyMetalineBase> {
 
 	private List<MetalineParser<? extends PropertyMetalineBase>> metalineParsers = new ArrayList<>();
 	
 	public PropertyParser() {
 	
 		metalineParsers.add(new PropagationParser());
+	}
+	
+	public PropertyNode parse(Property property) {
+		
+		String name = property.getName();
+		DefaultAccessNode defaultAccess = DefaultAccessNode.fromAccess(property.getLocalDefaultAccess());
+		
+		List<RoleNode> roleRules = new ArrayList<>();
+		
+			property.getLocalGrantRoles().forEach(role -> 
+				roleRules.add(new RoleNode(role.getName(), Access.GRANT)
+			));
+			
+			property.getLocalDenyRoles().forEach(role -> 
+				roleRules.add(new RoleNode(role.getName(), Access.DENY)
+			));
+		
+		List<PropertyMetalineBase> metalines = new ArrayList<>();
+		
+			metalineParsers.forEach(parser -> metalines.add(parser.parse(property)));
+		
+		return new PropertyNode(name, defaultAccess, roleRules, metalines);
 	}
 	
 	public PropertyNode parse(TokenSequence tokens) {
@@ -44,9 +67,9 @@ public class PropertyParser extends KsdlNodeParserBase<PropertyNode> implements 
 		
 		String name = nameToken.getRaw();
 		
-		DefaultAccessNode defaultRule = defaultRuleToken.toNode();
+		DefaultAccessNode defaultAccess = defaultRuleToken.toNode();
 
-		return new PropertyNode(name, defaultRule, roleRules, metalines);
+		return new PropertyNode(name, defaultAccess, roleRules, metalines);
 	}
 
 	@Override

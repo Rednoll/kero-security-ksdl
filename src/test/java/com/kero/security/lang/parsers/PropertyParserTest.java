@@ -5,9 +5,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
+import com.kero.security.core.access.Access;
 import com.kero.security.lang.collections.TokenSequence;
 import com.kero.security.lang.nodes.DefaultAccessNode;
 import com.kero.security.lang.nodes.PropertyNode;
+import com.kero.security.lang.nodes.RoleNode;
 import com.kero.security.lang.nodes.metaline.PropagationMetaline;
 import com.kero.security.lang.tokens.DefaultAccessToken;
 import com.kero.security.lang.tokens.KeyWordToken;
@@ -40,8 +42,8 @@ public class PropertyParserTest {
 		
 		assertEquals(propNode.getName(), "text");
 		assertEquals(propNode.getDefaultAccess(), DefaultAccessNode.GRANT);
-		assertTrue(propNode.getGrantRoles().contains("OWNER"));
-		assertTrue(propNode.getDenyRoles().contains("FRIEND"));
+		assertTrue(propNode.getRoleRules().contains(new RoleNode("OWNER", Access.GRANT)));
+		assertTrue(propNode.getRoleRules().contains(new RoleNode("FRIEND", Access.DENY)));
 		
 		PropagationMetaline metaline = (PropagationMetaline) propNode.getMetalines().get(0);
 		

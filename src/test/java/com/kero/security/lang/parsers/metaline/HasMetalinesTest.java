@@ -9,6 +9,7 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import com.kero.security.core.property.Property;
 import com.kero.security.lang.collections.TokenSequence;
 import com.kero.security.lang.nodes.metaline.MetalineNode;
 import com.kero.security.lang.tokens.KeyWordToken;
@@ -49,8 +50,8 @@ public class HasMetalinesTest {
 		assertTrue(nodes.contains(node1));
 		assertTrue(nodes.contains(node2));
 		
-		Mockito.verify(parser1, Mockito.times(1)).parse(Mockito.any());
-		Mockito.verify(parser2, Mockito.times(1)).parse(Mockito.any());
+		Mockito.verify(parser1, Mockito.times(1)).parse(seq);
+		Mockito.verify(parser2, Mockito.times(1)).parse(seq);
 	}
 	
 	public static class SomeParser implements HasMetalines {
@@ -80,6 +81,12 @@ public class HasMetalinesTest {
 		}
 
 		@Override
+		public MetalineNode parse(Property property) {
+			
+			return null;
+		}
+		
+		@Override
 		public MetalineNode parse(TokenSequence tokens) {
 			
 			tokens.poll();
@@ -104,6 +111,12 @@ public class HasMetalinesTest {
 		public boolean isMatch(TokenSequence tokens) {
 		
 			return tokens.get(1) == KeyWordToken.OPEN_BLOCK;
+		}
+		
+		@Override
+		public MetalineNode parse(Property property) {
+			
+			return null;
 		}
 
 		@Override

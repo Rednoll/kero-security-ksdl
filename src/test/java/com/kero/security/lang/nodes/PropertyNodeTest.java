@@ -3,9 +3,9 @@ package com.kero.security.lang.nodes;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
@@ -20,13 +20,11 @@ public class PropertyNodeTest {
 	@Test
 	public void interpret() {
 		
-		Set<String> grantRoles = new HashSet<>();
-			grantRoles.add("OWNER");
+		List<RoleNode> roles = new ArrayList<>();
+			roles.add(new RoleNode("OWNER", Access.GRANT));
+			roles.add(new RoleNode("ANY", Access.DENY));
 		
-		Set<String> denyRoles = new HashSet<>();
-			denyRoles.add("ANY");
-		
-		PropertyNode propertyNode = new PropertyNode("text", DefaultAccessNode.GRANT, grantRoles, denyRoles, Collections.emptyList());
+		PropertyNode propertyNode = new PropertyNode("text", DefaultAccessNode.GRANT, roles, Collections.emptyList());
 		
 		KeroAccessAgent agent = new KeroAccessAgentFactoryImpl().create();
 		
@@ -37,8 +35,8 @@ public class PropertyNodeTest {
 		Property property = scheme.getLocalProperty("text");
 	
 		assertEquals(property.getDefaultAccess(), Access.GRANT);
-		assertTrue(property.getGrantRoles().contains(agent.getRole("OWNER")));
-		assertTrue(property.getDenyRoles().contains(agent.getRole("ANY")));
+		assertTrue(property.getLocalGrantRoles().contains(agent.getRole("OWNER")));
+		assertTrue(property.getLocalDenyRoles().contains(agent.getRole("ANY")));
 	}
 	
 	public static class TestClass {}

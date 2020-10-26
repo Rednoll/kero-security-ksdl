@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
+import com.kero.security.core.property.Property;
 import com.kero.security.lang.collections.TokenSequence;
 import com.kero.security.lang.nodes.metaline.MetalineNode;
 import com.kero.security.lang.tokens.KeyWordToken;
@@ -23,7 +24,7 @@ public class MetalineParserBaseTest {
 		assertTrue(parser.isMatch(seq));
 	}
 	
-	public static class TestMetalineParser extends MetalineParserBase<TestNode> {
+	public static class TestMetalineParser extends MetalineParserBase<Property, TestNode> {
 		
 		public TestMetalineParser() {
 			super("test");
@@ -34,7 +35,20 @@ public class MetalineParserBaseTest {
 			
 			return null;
 		}
+
+		@Override
+		public TestNode parse(Property property) {
+			
+			return null;
+		}
 	}
 	
-	public static class TestNode implements MetalineNode {}
+	public static class TestNode implements MetalineNode {
+
+		@Override
+		public TokenSequence tokenize() {
+			
+			return null;
+		}
+	}
 }
