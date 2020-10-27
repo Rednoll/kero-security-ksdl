@@ -3,8 +3,8 @@ package com.kero.security.lang.provider;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import com.kero.security.ksdl.provider.KsdlProvider;
-import com.kero.security.ksdl.provider.ProviderCacheWrap;
+import com.kero.security.ksdl.reader.KsdlReader;
+import com.kero.security.ksdl.reader.ReaderCacheWrap;
 import com.kero.security.lang.collections.RootNodeList;
 
 public class CachedProviderTest {
@@ -12,14 +12,14 @@ public class CachedProviderTest {
 	@Test
 	public void getRoots_One() {
 		
-		KsdlProvider provider = Mockito.mock(KsdlProvider.class);
-		Mockito.when(provider.getRoots()).thenReturn(new RootNodeList());
+		KsdlReader provider = Mockito.mock(KsdlReader.class);
+		Mockito.when(provider.readRoots()).thenReturn(new RootNodeList());
 		
-		ProviderCacheWrap cached = new ProviderCacheWrap(provider);
+		ReaderCacheWrap cached = new ReaderCacheWrap(provider);
 		
-		cached.getRoots();
-		cached.getRoots();
+		cached.readRoots();
+		cached.readRoots();
 		
-		Mockito.verify(provider, Mockito.times(1)).getRoots();
+		Mockito.verify(provider, Mockito.times(1)).readRoots();
 	}
 }

@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 
 import com.google.common.jimfs.Configuration;
 import com.google.common.jimfs.Jimfs;
-import com.kero.security.ksdl.provider.resource.FileResource;
+import com.kero.security.ksdl.resource.FileResource;
 
 public class FileResourceTest {
 
@@ -21,26 +21,12 @@ public class FileResourceTest {
 		
 		FileSystem fileSystem = Jimfs.newFileSystem(Configuration.unix());
 		
-		Path root = fileSystem.getPath("/root");
-		Files.createDirectories(root);
+		Path file = fileSystem.getPath("file1.k-s");
 		
-		Path subFolder = fileSystem.getPath("/root/sub");
-		Files.createDirectories(subFolder);
-		
-		Path file1 = fileSystem.getPath("/root/file1.k-s");
-		Path file2 = fileSystem.getPath("/root/sub/file2.k-s");
-		Path file3 = fileSystem.getPath("/root/sub/file3.txt");
-		
-		Files.write(file1, "test1".getBytes(), StandardOpenOption.CREATE_NEW);
-		Files.write(file2, "test2".getBytes(), StandardOpenOption.CREATE_NEW);
-		Files.write(file3, "test3".getBytes(), StandardOpenOption.CREATE_NEW);
+		Files.write(file, "test".getBytes(), StandardOpenOption.CREATE_NEW);
 
-		FileResource resource = new FileResource(root);
+		FileResource resource = new FileResource(file);
 		
-		assertEquals(resource.getRawText(), "test1\ntest2");
-		
-		resource = new FileResource(root, ".txt");
-		
-		assertEquals(resource.getRawText(), "test3");
+		assertEquals(resource.getRawText(), "test");
 	}
 }

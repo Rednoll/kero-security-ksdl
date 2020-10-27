@@ -1,6 +1,6 @@
-package com.kero.security.ksdl.provider.resource;
+package com.kero.security.ksdl.resource;
 
-public interface KsdlTextResource {
+public interface KsdlTextResource extends KsdlResource {
 
 	public String getRawText();
 	

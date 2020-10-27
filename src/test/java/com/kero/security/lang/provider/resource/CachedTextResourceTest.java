@@ -5,9 +5,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import com.kero.security.ksdl.provider.resource.KsdlTextResource;
-import com.kero.security.ksdl.provider.resource.KsdlTextResourceWrap;
-import com.kero.security.ksdl.provider.resource.TextResourceCacheWrap;
+import com.kero.security.ksdl.resource.KsdlTextResource;
+import com.kero.security.ksdl.resource.KsdlTextResourceWrap;
+import com.kero.security.ksdl.resource.TextResourceCacheWrap;
 
 public class CachedTextResourceTest {
 

@@ -1,4 +1,4 @@
-package com.kero.security.ksdl.provider.resource;
+package com.kero.security.ksdl.resource;
 
 public class TextResourceCacheWrap implements KsdlTextResourceWrap {
 	
@@ -22,6 +22,12 @@ public class TextResourceCacheWrap implements KsdlTextResourceWrap {
 		return this.rawText;
 	}
 
+	@Override
+	public String getName() {
+		
+		return this.original.getName();
+	}
+	
 	@Override
 	public KsdlTextResource getOriginal() {
 		

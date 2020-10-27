@@ -4,6 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.kero.security.lang.collections.TokenSequence;
+import com.kero.security.lang.exception.KsdlLexerException;
 import com.kero.security.lang.lexems.DefaultRuleLexem;
 import com.kero.security.lang.lexems.KeyWordLexem;
 import com.kero.security.lang.lexems.KsdlLexem;
@@ -31,7 +32,7 @@ public class KsdlLexer {
 		lexems.add(new NameLexem());
 	}
 	
-	public TokenSequence tokenize(String rawData) {
+	public TokenSequence tokenize(String rawData) throws KsdlLexerException {
 		
 		if(rawData == null || rawData.isEmpty()) return new TokenSequence();
 		

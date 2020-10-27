@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import com.kero.security.core.scheme.AccessScheme;
-import com.kero.security.ksdl.provider.KsdlProvider;
+import com.kero.security.ksdl.reader.KsdlReader;
 import com.kero.security.lang.collections.RootNodeList;
 import com.kero.security.lang.nodes.SchemeNode;
 
@@ -20,8 +20,8 @@ public class KsdlAccessSchemeConfiguratorTest {
 				
 			roots.add(node);
 		
-		KsdlProvider provider = Mockito.mock(KsdlProvider.class);
-		Mockito.when(provider.getRoots()).thenReturn(roots);
+		KsdlReader provider = Mockito.mock(KsdlReader.class);
+		Mockito.when(provider.readRoots()).thenReturn(roots);
 		
 		AccessScheme schemeMock = Mockito.mock(AccessScheme.class);
 		Mockito.when(schemeMock.getName()).thenReturn("TestScheme");

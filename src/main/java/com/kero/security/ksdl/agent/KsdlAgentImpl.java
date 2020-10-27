@@ -2,48 +2,40 @@ package com.kero.security.ksdl.agent;
 
 import com.kero.security.core.agent.KeroAccessAgent;
 import com.kero.security.core.scheme.configurator.KsdlAccessSchemeConfigurator;
-import com.kero.security.ksdl.provider.BaseCompositeProvider;
-import com.kero.security.ksdl.provider.CompositeProvider;
-import com.kero.security.ksdl.provider.KsdlProvider;
-import com.kero.security.ksdl.provider.TextualProvider;
-import com.kero.security.ksdl.provider.resource.KsdlTextResource;
+import com.kero.security.ksdl.reader.BaseCompositeReader;
+import com.kero.security.ksdl.reader.CompositeReader;
+import com.kero.security.ksdl.reader.KsdlReader;
 
 public class KsdlAgentImpl implements KsdlAgent {
 	
 	private KeroAccessAgent accessAgent;
 	
-	private CompositeProvider mainProvider;
+	private CompositeReader mainReader;
 	
 	KsdlAgentImpl(KeroAccessAgent agent) {
-		this(agent, new BaseCompositeProvider());
+		this(agent, new BaseCompositeReader());
 		
 	}
 	
-	KsdlAgentImpl(KeroAccessAgent accessAgent, CompositeProvider mainProvider) {
+	KsdlAgentImpl(KeroAccessAgent accessAgent, CompositeReader mainReader) {
 		
 		this.accessAgent = accessAgent;
-		this.mainProvider = mainProvider;
+		this.mainReader = mainReader;
 		
-		this.mainProvider = KsdlProvider.addCacheWrap(this.mainProvider);
+		this.mainReader = KsdlReader.addCacheWrap(this.mainReader);
 		
-		this.accessAgent.addConfigurator(new KsdlAccessSchemeConfigurator(this.mainProvider));
+		this.accessAgent.addConfigurator(new KsdlAccessSchemeConfigurator(this.mainReader));
 	}
 	
 	@Override
-	public void addProvider(KsdlProvider provider) {
+	public void addReader(KsdlReader provider) {
 		
-		this.mainProvider.addProvider(provider);
+		this.mainReader.addReader(provider);
 	}
-	
+
 	@Override
-	public void addTextResource(KsdlTextResource resource) {
+	public void preloadMainReader() {
 		
-		this.mainProvider.addProvider(new TextualProvider(resource));
-	}
-	
-	@Override
-	public void preloadMainProvider() {
-		
-		this.mainProvider.getRoots(); //Trigger load
+		this.mainReader.readRoots(); //Trigger load
 	}
 }

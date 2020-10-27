@@ -1,4 +1,4 @@
-package com.kero.security.ksdl.provider.resource.exception;
+package com.kero.security.ksdl.resource.exception;
 
 public class FileResourceIOException extends RuntimeException {
 
