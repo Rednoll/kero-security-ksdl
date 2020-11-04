@@ -1,4 +1,4 @@
-package com.kero.security.lang.provider;
+package com.kero.security.ksdl.reader;
 
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -7,7 +7,7 @@ import com.kero.security.ksdl.reader.KsdlReader;
 import com.kero.security.ksdl.reader.ReaderCacheWrap;
 import com.kero.security.lang.collections.RootNodeList;
 
-public class CachedProviderTest {
+public class CachedReaderTest {
 
 	@Test
 	public void getRoots_One() {

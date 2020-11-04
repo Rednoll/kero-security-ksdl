@@ -3,6 +3,7 @@ package com.kero.security.lang;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.kero.security.lang.collections.RootNodeList;
 import com.kero.security.lang.collections.TokenSequence;
 import com.kero.security.lang.exception.KsdlLexerException;
 import com.kero.security.lang.lexems.DefaultRuleLexem;
@@ -30,6 +31,18 @@ public class KsdlLexer {
 		lexems.add(new DefaultRuleLexem());
 		lexems.add(new RoleLexem());
 		lexems.add(new NameLexem());
+	}
+	
+	public TokenSequence tokenize(RootNodeList list) {
+		
+		TokenSequence seq = new TokenSequence();
+		
+		list.forEach(node -> {
+		
+			seq.add(node.tokenize());
+		});
+		
+		return seq;
 	}
 	
 	public TokenSequence tokenize(String rawData) throws KsdlLexerException {

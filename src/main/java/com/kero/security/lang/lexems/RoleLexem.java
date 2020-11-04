@@ -8,7 +8,7 @@ public class RoleLexem extends KsdlLexemBase<RoleToken> {
 		super("[+-][A-Za-z][A-Za-z_0-9]*");
 		
 	}
-
+	
 	@Override
 	public RoleToken tokenize(String data) {
 		

@@ -1,4 +1,4 @@
-package com.kero.security.lang.provider;
+package com.kero.security.ksdl.reader;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -10,12 +10,12 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import com.kero.security.ksdl.reader.TextualReader;
-import com.kero.security.ksdl.resource.KsdlTextResource;
+import com.kero.security.ksdl.resource.KsdlResource;
 import com.kero.security.ksdl.resource.repository.KsdlResourceRepository;
 import com.kero.security.lang.collections.RootNodeList;
 import com.kero.security.lang.nodes.SchemeNode;
 
-public class TextualProviderTest {
+public class TextualReaderTest {
 
 	@Test
 	public void getRoots() {
@@ -25,10 +25,10 @@ public class TextualProviderTest {
 				+ "- propagation: OWNER -> FRIEND\n"
 				+ "}";
 		
-		KsdlTextResource resource = Mockito.mock(KsdlTextResource.class);
-		Mockito.when(resource.getRawText()).thenReturn(data);
+		KsdlResource resource = Mockito.mock(KsdlResource.class);
+		Mockito.when(resource.readData()).thenReturn(data);
 		
-		Set<KsdlTextResource> resources = new HashSet<>();
+		Set<KsdlResource> resources = new HashSet<>();
 			resources.add(resource);
 		
 		KsdlResourceRepository repository = Mockito.mock(KsdlResourceRepository.class);

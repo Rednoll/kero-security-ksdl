@@ -1,9 +1,10 @@
 package com.kero.security.lang;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
-import com.kero.security.core.agent.KeroAccessAgent;
 import com.kero.security.lang.collections.RootNodeList;
 import com.kero.security.lang.collections.TokenSequence;
 import com.kero.security.lang.nodes.KsdlRootNode;
@@ -22,13 +23,24 @@ public class KsdlParser {
 			parsers.add(new SchemeParser());
 	}
 	
-	public RootNodeList parse(KeroAccessAgent agent) {
+	public RootNodeList parse(Collection<?> objs) {
 		
-		RootNodeList result = new RootNodeList();
+		return objs.stream()
+			.map(this::parse)
+		.collect(Collectors.toCollection(RootNodeList::new));
+	}
+	
+	public KsdlRootNode parse(Object obj) {
 		
-			parsers.forEach(parser -> result.add(parser.parse(agent))); 
+		for(KsdlRootNodeParser parser : parsers) {
+			
+			if(parser.isMatch(obj)) {
+				
+				return parser.parse(obj);
+			}
+		}
 		
-		return result;
+		throw new RuntimeException("Can't parse "+obj);
 	}
 	
 	public RootNodeList parse(TokenSequence tokensArg) {

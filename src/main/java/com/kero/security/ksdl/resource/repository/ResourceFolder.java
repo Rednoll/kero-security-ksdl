@@ -1,26 +1,34 @@
 package com.kero.security.ksdl.resource.repository;
 
+import java.io.File;
+import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.regex.Matcher;
 
 import com.kero.security.ksdl.resource.FileResource;
-import com.kero.security.ksdl.resource.KsdlTextResource;
+import com.kero.security.ksdl.resource.additionals.ResourceAddress;
 import com.kero.security.ksdl.resource.exception.FileResourceIOException;
 
-public class ResourceFolder implements KsdlResourceRepository<KsdlTextResource> {
+public abstract class ResourceFolder<T> implements KsdlWritableResourceRepository<FileResource<T>> {
 
 	protected Path path;
 	protected Set<String> suffixes;
 	
-	public ResourceFolder(Path path, String... suffixes) {
-		super();
+	public ResourceFolder(Path path, Collection<String> suffixes) {
 		
 		this.path = path;
-		this.suffixes = new HashSet<>(Arrays.asList(suffixes));
+		this.suffixes = new HashSet<>(suffixes);
+	}
+	
+	public ResourceFolder(Path path, String... suffixes) {
+		this(path, Arrays.asList(suffixes));
+		
 	}
 	
 	public ResourceFolder(Path path) {
@@ -28,10 +36,12 @@ public class ResourceFolder implements KsdlResourceRepository<KsdlTextResource> 
 		
 	}
 	
+	protected abstract FileResource<T> getResource(Path path);
+	
 	@Override
-	public Collection<KsdlTextResource> getAll() {
+	public Collection<FileResource<T>> getAll() {
 		
-		Collection<KsdlTextResource> resources = new HashSet<>();
+		Collection<FileResource<T>> resources = new HashSet<>();
 		
 		try {
 			
@@ -39,7 +49,7 @@ public class ResourceFolder implements KsdlResourceRepository<KsdlTextResource> 
 				 
 				if(isSuitable(sub)) {
 	
-					resources.add(new FileResource(sub));
+					resources.add(getResource(sub));
 				}
 			});
 		}
@@ -66,6 +76,38 @@ public class ResourceFolder implements KsdlResourceRepository<KsdlTextResource> 
 		return false;
 	}
  
+	@Override
+	public FileResource<T> getResource(ResourceAddress address) {
+		
+		if(!hasResource(address)) throw new RuntimeException("Resource with address: "+address+" not found!");
+		
+		return getResource(determineResourcePath(address));
+	}
+	
+	@Override
+	public boolean hasResource(ResourceAddress address) {
+		
+		return determineResourcePath(address) != null;
+	}
+	
+	private Path determineResourcePath(ResourceAddress address) {
+	
+		FileSystem fs = this.path.getFileSystem();
+		
+		String fileSeparator = fs.getSeparator();
+		
+		String addressPath = address.getRaw().replaceAll("\\"+ResourceAddress.SEPARATOR, Matcher.quoteReplacement(fileSeparator));
+		
+		for(String suffix : suffixes) {
+			
+			Path path = fs.getPath(this.path.toString(), addressPath + suffix);
+			
+			if(Files.exists(path)) return path;
+		}
+		
+		return null;
+	}
+	
 	public Path getPath() {
  
 		return this.path;

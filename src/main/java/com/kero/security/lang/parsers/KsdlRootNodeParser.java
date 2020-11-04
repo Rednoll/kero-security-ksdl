@@ -1,13 +1,12 @@
 package com.kero.security.lang.parsers;
 
-import com.kero.security.core.agent.KeroAccessAgent;
-import com.kero.security.lang.collections.RootNodeList;
 import com.kero.security.lang.collections.TokenSequence;
-import com.kero.security.lang.nodes.KsdlNode;
+import com.kero.security.lang.nodes.KsdlRootNode;
 
-public interface KsdlRootNodeParser<S, T extends KsdlNode> extends KsdlNodeParser<S, T> {
+public interface KsdlRootNodeParser<S, T extends KsdlRootNode> extends KsdlNodeParser<S, T> {
 
+	public boolean isMatch(Object obj);
 	public boolean isMatch(TokenSequence tokens);
 	
-	public RootNodeList parse(KeroAccessAgent agent);
+	public T parse(S obj);
 }

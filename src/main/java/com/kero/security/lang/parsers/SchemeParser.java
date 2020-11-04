@@ -3,9 +3,7 @@ package com.kero.security.lang.parsers;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.kero.security.core.agent.KeroAccessAgent;
 import com.kero.security.core.scheme.AccessScheme;
-import com.kero.security.lang.collections.RootNodeList;
 import com.kero.security.lang.collections.TokenSequence;
 import com.kero.security.lang.nodes.DefaultAccessNode;
 import com.kero.security.lang.nodes.PropertyNode;
@@ -17,26 +15,14 @@ import com.kero.security.lang.tokens.NameToken;
 public class SchemeParser extends KsdlNodeParserBase<AccessScheme, SchemeNode> implements KsdlRootNodeParser<AccessScheme, SchemeNode>, HasBlock<PropertyNode> {
 
 	private PropertyParser propertyParser = new PropertyParser();
-	
-	public boolean isMatch(TokenSequence tokens) {
+
+	@Override
+	public boolean isMatch(Object obj) {
 		
-		if(!tokens.isToken(0, KeyWordToken.SCHEME)) return false;
-		if(!tokens.isToken(1, NameToken.class)) return false;
-		
-		return true;
+		return obj instanceof AccessScheme;
 	}
 	
-	public RootNodeList parse(KeroAccessAgent agent) {
-		
-		RootNodeList result = new RootNodeList();
-		
-			agent.getSchemeStorage().values().forEach(scheme -> 	
-				result.add(this.parse(scheme))
-			);
-	
-		return result;
-	}
-	
+	@Override
 	public SchemeNode parse(AccessScheme scheme) {
 		
 		String typeName = scheme.getName();
@@ -49,6 +35,16 @@ public class SchemeParser extends KsdlNodeParserBase<AccessScheme, SchemeNode> i
 		return new SchemeNode(typeName, defaultRule, props);
 	}
 	
+	@Override
+	public boolean isMatch(TokenSequence tokens) {
+		
+		if(!tokens.isToken(0, KeyWordToken.SCHEME)) return false;
+		if(!tokens.isToken(1, NameToken.class)) return false;
+		
+		return true;
+	}
+	
+	@Override
 	public SchemeNode parse(TokenSequence tokens) {
 	
 		tokens.poll(); //SCHEME

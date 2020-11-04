@@ -1,4 +1,4 @@
-package com.kero.security.lang.provider;
+package com.kero.security.ksdl.reader;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -14,7 +14,7 @@ import com.kero.security.ksdl.reader.KsdlReader;
 import com.kero.security.lang.collections.RootNodeList;
 import com.kero.security.lang.nodes.KsdlRootNode;
 
-public class CompositeProviderTest {
+public class CompositeReaderTest {
 
 	@Test
 	public void test() {

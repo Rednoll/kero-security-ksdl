@@ -1,35 +1,37 @@
 package com.kero.security.ksdl.resource;
 
-import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 
-import com.kero.security.ksdl.resource.exception.FileResourceIOException;
+import com.kero.security.ksdl.resource.additionals.ResourceAddress;
 
-public class FileResource implements KsdlTextResource {
+public abstract class FileResource<T> implements KsdlWritableResource<T> {
 
-	private Path path;
-	
-	public FileResource(Path path) {
-		
+	protected Path path;
+	protected Path repositoryPath;
+
+	public FileResource(Path repositoryPath, Path path) {
+
+		this.repositoryPath = repositoryPath;
 		this.path = path;
 	}
 	
 	@Override
-	public String getRawText() {
+	public ResourceAddress getAddress() {
 		
-		try {
+		String fileSeparator = this.path.getFileSystem().getSeparator();
+		
+		String repositoryPath = this.repositoryPath.toAbsolutePath().toString();
+		String rawPath = this.path.toAbsolutePath().toString();
+			rawPath = rawPath.substring(repositoryPath.length());
+			rawPath = rawPath.replaceFirst("\\..+$", "");
 			
-			return new String(Files.readAllBytes(path));
-		}
-		catch(IOException e) {
+		String address = rawPath.replaceAll("\\"+fileSeparator, "\\"+ResourceAddress.SEPARATOR);
 		
-			throw new FileResourceIOException(e);
-		}
-	}
-	
-	public String getName() {
+		if(address.startsWith(".")) {
 		
-		return this.path.toString();
+			address = address.substring(1);
+		}
+		
+		return new ResourceAddress(address);
 	}
 }
