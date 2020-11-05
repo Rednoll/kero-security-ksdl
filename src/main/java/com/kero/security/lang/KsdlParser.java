@@ -3,7 +3,6 @@ package com.kero.security.lang;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import com.kero.security.lang.collections.RootNodeList;
 import com.kero.security.lang.collections.TokenSequence;
@@ -25,9 +24,11 @@ public class KsdlParser {
 	
 	public RootNodeList parse(Collection<?> objs) {
 		
-		return objs.stream()
-			.map(this::parse)
-		.collect(Collectors.toCollection(RootNodeList::new));
+		RootNodeList result = new RootNodeList();
+		
+		objs.forEach(obj -> result.add(this.parse(obj)));
+		
+		return result;
 	}
 	
 	public KsdlRootNode parse(Object obj) {

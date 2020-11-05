@@ -1,12 +1,12 @@
 package com.kero.security.ksdl.reader;
 
-import com.kero.security.lang.collections.RootNodeList;
+import com.kero.security.ksdl.script.ScriptList;
 
 public class ReaderCacheWrap<T extends KsdlReader> implements KsdlReader {
 
 	protected T original;
 	
-	protected RootNodeList roots;
+	protected ScriptList all;
 	
 	public ReaderCacheWrap(T original) {
 		
@@ -15,17 +15,17 @@ public class ReaderCacheWrap<T extends KsdlReader> implements KsdlReader {
 	
 	public void invalidate() {
 		
-		this.roots = null;
+		this.all = null;
 	}
 	
 	@Override
-	public RootNodeList readRoots() {
+	public ScriptList readAll() {
 		
-		if(roots == null) {
+		if(all == null) {
 	
-			roots = original.readRoots();
+			all = original.readAll();
 		}
 		
-		return this.roots;
+		return this.all;
 	}
 }

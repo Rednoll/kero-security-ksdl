@@ -2,6 +2,8 @@ package com.kero.security.ksdl.reader;
 
 import com.kero.security.ksdl.resource.KsdlResource;
 import com.kero.security.ksdl.resource.repository.KsdlResourceRepository;
+import com.kero.security.ksdl.script.BaseKsdlScript;
+import com.kero.security.ksdl.script.ScriptList;
 import com.kero.security.lang.KsdlLexer;
 import com.kero.security.lang.KsdlParser;
 import com.kero.security.lang.collections.RootNodeList;
@@ -17,9 +19,9 @@ public class TextualReader extends KsdlReaderBase {
 	}
 	
 	@Override
-	public RootNodeList readRoots() {
+	public ScriptList readAll() {
 		
-		RootNodeList roots = new RootNodeList();
+		ScriptList scripts = new ScriptList();
 		
 		resources.getAll().forEach(resource -> {
 			
@@ -27,9 +29,11 @@ public class TextualReader extends KsdlReaderBase {
 			
 			TokenSequence tokens = KsdlLexer.getInstance().tokenize(text);
 		
-			roots.add(KsdlParser.getInstance().parse(tokens));
+			RootNodeList roots = KsdlParser.getInstance().parse(tokens);
+			
+			scripts.add(new BaseKsdlScript(resource.getAddress(), roots));
 		});
 
-		return roots;
+		return scripts;
 	}
 }

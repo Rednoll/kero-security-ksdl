@@ -2,7 +2,7 @@ package com.kero.security.core.scheme.configurator;
 
 import com.kero.security.core.scheme.AccessScheme;
 import com.kero.security.ksdl.reader.KsdlReader;
-import com.kero.security.lang.collections.RootNodeList;
+import com.kero.security.ksdl.script.ScriptList;
 import com.kero.security.lang.collections.SchemeNodeMap;
 import com.kero.security.lang.nodes.SchemeNode;
 
@@ -18,12 +18,15 @@ public class KsdlAccessSchemeConfigurator extends AccessSchemeConfiguratorBase {
 	@Override
 	public void configure(AccessScheme scheme) {
 		
-		RootNodeList roots = reader.readRoots();
-	
-		SchemeNodeMap schemeNodes = roots.getSchemeNodes();
+		ScriptList scripts = reader.readAll();
 		
-		SchemeNode schemeNode = schemeNodes.getOrDefault(scheme.getName(), SchemeNode.EMPTY);
+		scripts.forEach(script -> {
+			
+			SchemeNodeMap schemeNodes = script.getContent().getSchemeNodes();
+			
+			SchemeNode schemeNode = schemeNodes.getOrDefault(scheme.getName(), SchemeNode.EMPTY);
 
-		schemeNode.interpret(scheme);
+			schemeNode.interpret(scheme);
+		});
 	}
 }

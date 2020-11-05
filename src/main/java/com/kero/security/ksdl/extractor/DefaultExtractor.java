@@ -10,45 +10,46 @@ import com.kero.security.core.agent.KeroAccessAgent;
 import com.kero.security.core.scheme.AccessScheme;
 import com.kero.security.core.scheme.storage.AccessSchemeStorage;
 import com.kero.security.ksdl.resource.additionals.ResourceAddress;
-import com.kero.security.ksdl.resource.repository.KsdlWritableResourceRepository;
+import com.kero.security.ksdl.script.BaseKsdlScript;
+import com.kero.security.ksdl.script.ScriptList;
 import com.kero.security.lang.KsdlParser;
 import com.kero.security.lang.collections.RootNodeList;
 
 public class DefaultExtractor implements KsdlExtractor {
 
-	private KeroAccessAgent agent;
-	
 	private Set<String> boilerplatePackages = new HashSet<>();
 	
-	public DefaultExtractor(KeroAccessAgent agent) {
-		
-		this.agent = agent;
+	public DefaultExtractor() {
 		
 		this.boilerplatePackages.add("impl");
 	}
 	
 	@Override
-	public void extractTo(KsdlWritableResourceRepository repository) {
+	public ScriptList extractFrom(KeroAccessAgent agent) {
 	
 		AccessSchemeStorage storage = agent.getSchemeStorage();
 		Set<AccessScheme> schemes = new HashSet<>(storage.values());
 
 		Map<String, Set<AccessScheme>> packages = buildPackageRepresentations(schemes);
 
-		packages.forEach((packageName, packageSchemes)-> {
-			
-			Map<AccessScheme, Set<AccessScheme>> packs = splitToPacksByRoots(packageSchemes);
-			
-			packs.forEach((rootScheme, packSchemes)-> {
+		ScriptList result = new ScriptList();
+		
+			packages.forEach((packageName, packageSchemes)-> {
 				
-				String packName = rootScheme.getName();
-				String address = packageName + ResourceAddress.SEPARATOR + packName;
-			
-				RootNodeList nodes = KsdlParser.getInstance().parse(packSchemes);
-			
-				// “еперь нужно пон€ть как и куда это писать.
+				Map<AccessScheme, Set<AccessScheme>> packs = splitToPacksByRoots(packageSchemes);
+				
+				packs.forEach((rootScheme, packSchemes)-> {
+					
+					String packName = rootScheme.getName();
+					String address = packageName + ResourceAddress.SEPARATOR + packName;
+				
+					RootNodeList nodes = KsdlParser.getInstance().parse(packSchemes);
+					
+					result.add(new BaseKsdlScript(new ResourceAddress(address), nodes));
+				});
 			});
-		});
+		
+		return result;
 	}
 	
 	protected Map<String, Set<AccessScheme>> buildPackageRepresentations(Set<AccessScheme> schemes) {

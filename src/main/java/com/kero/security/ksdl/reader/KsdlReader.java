@@ -1,10 +1,10 @@
 package com.kero.security.ksdl.reader;
 
-import com.kero.security.lang.collections.RootNodeList;
+import com.kero.security.ksdl.script.ScriptList;
 
 public interface KsdlReader {
 
-	public RootNodeList readRoots();
+	public ScriptList readAll();
 	
 	public static CompositeReader addCacheWrap(CompositeReader source) {
 		

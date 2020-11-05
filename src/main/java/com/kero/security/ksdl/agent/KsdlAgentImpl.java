@@ -36,6 +36,6 @@ public class KsdlAgentImpl implements KsdlAgent {
 	@Override
 	public void preloadMainReader() {
 		
-		this.mainReader.readRoots(); //Trigger load
+		this.mainReader.readAll(); //Trigger load
 	}
 }

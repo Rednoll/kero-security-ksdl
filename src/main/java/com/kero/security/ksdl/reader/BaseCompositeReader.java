@@ -2,7 +2,9 @@ package com.kero.security.ksdl.reader;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
+import com.kero.security.ksdl.script.ScriptList;
 import com.kero.security.lang.collections.RootNodeList;
 
 public class BaseCompositeReader implements CompositeReader {
@@ -25,14 +27,11 @@ public class BaseCompositeReader implements CompositeReader {
 	}
 	
 	@Override
-	public RootNodeList readRoots() {
+	public ScriptList readAll() {
 		
-		RootNodeList result = new RootNodeList();
+		ScriptList result = new ScriptList();
 		
-		for(KsdlReader source : readers) {
-		
-			result.addAll(source.readRoots());
-		}
+		readers.forEach(reader -> result.addAll(reader.readAll()));
 		
 		return result;
 	}
