@@ -6,5 +6,12 @@ public enum KeyWordToken implements KsdlToken {
 	METALINE,
 	OPEN_BLOCK,
 	CLOSE_BLOCK,
-	FORWARD_DIRECTION;
+	TO,
+	EXTENDS,
+	BIND;
+
+	public String toText() {
+		
+		return this.name().toLowerCase();
+	}
 }

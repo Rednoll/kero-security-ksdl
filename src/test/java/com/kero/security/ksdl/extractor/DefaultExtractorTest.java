@@ -24,7 +24,6 @@ public class DefaultExtractorTest {
 	@Test
 	public void test() {
 		
-		/*
 		KeroAccessAgent agent = new KeroAccessAgentFactoryImpl().create();
 			agent.addConfigurator(new AnnotationAccessSchemeConfigurator(agent));
 		
@@ -47,6 +46,5 @@ public class DefaultExtractorTest {
 		ScriptList scripts = extractor.extractFrom(agent);
 		
 		writer.writeAll(scripts);
-		*/
 	}
 }

@@ -1,5 +1,7 @@
 package com.kero.security.lang.speakers;
 
+import com.kero.security.core.access.Access;
+import com.kero.security.core.scheme.AccessScheme;
 import com.kero.security.lang.KsdlSpeaker;
 import com.kero.security.lang.collections.TokenSequence;
 import com.kero.security.lang.tokens.DefaultAccessToken;
@@ -18,7 +20,7 @@ public class SchemeSpeaker implements Speaker {
 		
 		return true;
 	}
-
+	
 	@Override
 	public String say(TokenSequence seq) {
 		
@@ -26,7 +28,7 @@ public class SchemeSpeaker implements Speaker {
 		
 		StringBuilder builder = new StringBuilder();
 		
-			builder.append("scheme ");
+			builder.append(KeyWordToken.SCHEME.toText()+" ");
 		
 			NameToken nameToken = seq.tryPoll(NameToken.class);
 			
@@ -36,6 +38,17 @@ public class SchemeSpeaker implements Speaker {
 			
 			builder.append(access.toText());
 	
+			if(seq.isToken(0, KeyWordToken.EXTENDS)) {
+				
+				seq.poll();
+				
+				builder.append(" "+KeyWordToken.EXTENDS.toText());
+			
+				NameToken parentNameToken = seq.tryPoll(NameToken.class);
+			
+				builder.append(" "+parentNameToken.getRaw());
+			}
+			
 			if(seq.isToken(0, KeyWordToken.OPEN_BLOCK)) {
 			
 				seq.poll();

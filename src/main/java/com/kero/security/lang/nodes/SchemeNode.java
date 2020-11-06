@@ -15,15 +15,23 @@ public class SchemeNode extends KsdlNodeBase implements KsdlRootNode {
 	
 	private String name;
 	
+	private String parentName;
+	
 	private DefaultAccessNode defaultAccess;
 	
 	private List<PropertyNode> properties;
 	
-	public SchemeNode(String name, DefaultAccessNode defaultAccess, List<PropertyNode> properties) {
+	public SchemeNode(String name, String parentName, DefaultAccessNode defaultAccess, List<PropertyNode> properties) {
 		
 		this.name = name;
+		this.parentName = parentName;
 		this.defaultAccess = defaultAccess;
 		this.properties = properties;
+	}
+	
+	public SchemeNode(String name, DefaultAccessNode defaultAccess, List<PropertyNode> properties) {
+		this(name, null, defaultAccess, properties);
+	
 	}
 	
 	@Override
@@ -33,6 +41,12 @@ public class SchemeNode extends KsdlNodeBase implements KsdlRootNode {
 			seq.add(KeyWordToken.SCHEME);
 			seq.add(new NameToken(this.name));
 			seq.add(this.defaultAccess.tokenize());
+			
+			if(parentName != null && !parentName.isEmpty()) {
+				
+				seq.add(KeyWordToken.EXTENDS);
+				seq.add(new NameToken(parentName));
+			}
 			
 			if(this.properties.size() > 0) {
 				

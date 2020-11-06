@@ -26,13 +26,21 @@ public class SchemeParser extends KsdlNodeParserBase<AccessScheme, SchemeNode> i
 	public SchemeNode parse(AccessScheme scheme) {
 		
 		String typeName = scheme.getName();
+		
+		String parentName = null;
+		
+			if(scheme.getParent() != AccessScheme.EMPTY && scheme.getParent().getTypeClass() != Object.class) {
+				
+				parentName = scheme.getParent().getName();
+			}
+		
 		DefaultAccessNode defaultRule = DefaultAccessNode.fromAccess(scheme.getDefaultAccess());
 		
 		List<PropertyNode> props = new ArrayList<>();
 		
 			scheme.getLocalProperties().forEach(prop -> props.add(propertyParser.parse(prop)));
 		
-		return new SchemeNode(typeName, defaultRule, props);
+		return new SchemeNode(typeName, parentName, defaultRule, props);
 	}
 	
 	@Override
@@ -49,9 +57,15 @@ public class SchemeParser extends KsdlNodeParserBase<AccessScheme, SchemeNode> i
 	
 		tokens.poll(); //SCHEME
 		
-		NameToken nameToken = (NameToken) tokens.poll();
+		NameToken nameToken = tokens.tryPoll(NameToken.class);
 		
 		DefaultAccessToken defaultRuleToken = tokens.tryGetOrDefault(DefaultAccessToken.EMPTY);
+		
+		if(tokens.isToken(0, KeyWordToken.EXTENDS)) {
+		
+			tokens.poll(); // Extends
+			tokens.poll(); // Name
+		}
 		
 		List<PropertyNode> props = this.parseBlock(tokens);
 		String typeName = nameToken.getRaw();
@@ -64,5 +78,10 @@ public class SchemeParser extends KsdlNodeParserBase<AccessScheme, SchemeNode> i
 	public PropertyNode parseBlockUnit(TokenSequence tokens) {
 		
 		return propertyParser.parse(tokens);
+	}
+	
+	public Class<SchemeNode> getNodeClass() {
+	
+		return SchemeNode.class;
 	}
 }

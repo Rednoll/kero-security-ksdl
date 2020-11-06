@@ -45,7 +45,7 @@ public class KeyWordLexemTest {
 		assertEquals(metaline, KeyWordToken.METALINE);
 		
 		KeyWordToken forwardDirection = KeyWordLexem.FORWARD_DIRECTION.tokenize("->");
-		assertEquals(forwardDirection, KeyWordToken.FORWARD_DIRECTION);
+		assertEquals(forwardDirection, KeyWordToken.TO);
 		
 		KeyWordToken openBlock = KeyWordLexem.OPEN_BLOCK.tokenize("{");
 		assertEquals(openBlock, KeyWordToken.OPEN_BLOCK);

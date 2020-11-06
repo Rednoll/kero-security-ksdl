@@ -50,39 +50,26 @@ public class PropagationParser extends MetalineParserBase<Property, PropagationM
 	@Override
 	public PropagationMetaline parse(TokenSequence tokens) {
 		
-		tokens.poll(); // META_LINE
-		tokens.poll(); // PROPAGATION
-		tokens.poll(); // OPEN_BLOCK
+		tokens.consume(KeyWordToken.METALINE);
+		tokens.poll(); // propagation (name)
+		tokens.consume(KeyWordToken.OPEN_BLOCK);
 		
-		if(!(tokens.peek() instanceof NameToken)) {
-			
-			throw new KsdlParseException("Can't parse!");
-		}
-		
-		NameToken fromRoleName = (NameToken) tokens.poll();
+		NameToken fromRoleName = tokens.tryPoll(NameToken.class);
 		
 		Map<String, String> propagationMap = new HashMap<>();
 		
-		while(!tokens.isEmpty()) {
+		while(tokens.peek() != KeyWordToken.CLOSE_BLOCK) {
 			
-			if(tokens.peek() == KeyWordToken.CLOSE_BLOCK) {
-			
-				tokens.poll();
-				break;
-			}
-			
-			if(tokens.peek() != KeyWordToken.FORWARD_DIRECTION) throw new KsdlParseException("Can't parse!");
-			
-			tokens.poll(); // FORWARD_DIRECTION
-			
-			if(!(tokens.peek() instanceof NameToken)) throw new KsdlParseException("Can't parse!");
-			
-			NameToken toRoleName = (NameToken) tokens.poll();
+			tokens.consume(KeyWordToken.TO);
+
+			NameToken toRoleName = tokens.tryPoll(NameToken.class);
 		
 			propagationMap.put(fromRoleName.getRaw(), toRoleName.getRaw());
 			
 			fromRoleName = toRoleName;
 		}
+		
+		tokens.poll();
 		
 		return new PropagationMetaline(propagationMap);
 	}

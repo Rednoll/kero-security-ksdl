@@ -36,7 +36,7 @@ public class PropagationSpeaker extends MetalineSpeakerBase {
 				
 				while(!seq.isToken(0, KeyWordToken.CLOSE_BLOCK)) {
 				
-					seq.consume(KeyWordToken.FORWARD_DIRECTION);
+					seq.consume(KeyWordToken.TO);
 				
 					builder.append(" -> ");
 					

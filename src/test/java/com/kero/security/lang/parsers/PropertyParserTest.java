@@ -34,7 +34,7 @@ public class PropertyParserTest {
 			seq.add(new NameToken("propagation"));
 			seq.add(KeyWordToken.OPEN_BLOCK);
 			seq.add(new NameToken("OWNER"));
-			seq.add(KeyWordToken.FORWARD_DIRECTION);
+			seq.add(KeyWordToken.TO);
 			seq.add(new NameToken("FRIEND"));
 			seq.add(KeyWordToken.CLOSE_BLOCK);
 			

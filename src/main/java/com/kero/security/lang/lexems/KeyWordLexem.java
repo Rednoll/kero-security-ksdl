@@ -8,11 +8,14 @@ public enum KeyWordLexem implements KsdlLexem<KeyWordToken> {
 	
 	SCHEME("scheme", true, KeyWordToken.SCHEME),
 	METALINE("\\-", true, KeyWordToken.METALINE),
-	FORWARD_DIRECTION("\\->", false, KeyWordToken.FORWARD_DIRECTION),
+	FORWARD_DIRECTION("\\->", false, KeyWordToken.TO),
+	TO("to", true, KeyWordToken.TO),
 	OPEN_BLOCK("\\{", false, KeyWordToken.OPEN_BLOCK),
 	CLOSE_BLOCK("\\}", false, KeyWordToken.CLOSE_BLOCK),
 	OPEN_SHORT_BLOCK(":", false, KeyWordToken.OPEN_BLOCK),
-	CLOSE_SHORT_BLOCK("\\n", false, KeyWordToken.CLOSE_BLOCK); //Anonymous, not common work (detecting)
+	CLOSE_SHORT_BLOCK("\\n", false, KeyWordToken.CLOSE_BLOCK), //Anonymous, not common work (detecting by lexer)
+	EXTENDS("extends", true, KeyWordToken.EXTENDS),
+	BIND("bind", true, KeyWordToken.BIND);
 	
 	private String pattern;
 	private boolean requireSpace;

@@ -9,4 +9,6 @@ public interface KsdlRootNodeParser<S, T extends KsdlRootNode> extends KsdlNodeP
 	public boolean isMatch(TokenSequence tokens);
 	
 	public T parse(S obj);
+	
+	public Class<T> getNodeClass();
 }

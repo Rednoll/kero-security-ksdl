@@ -1,12 +1,12 @@
 package com.kero.security.lang;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import com.kero.security.lang.collections.RootNodeList;
 import com.kero.security.lang.collections.TokenSequence;
 import com.kero.security.lang.nodes.KsdlRootNode;
+import com.kero.security.lang.parsers.BindParser;
 import com.kero.security.lang.parsers.KsdlRootNodeParser;
 import com.kero.security.lang.parsers.SchemeParser;
 
@@ -20,24 +20,16 @@ public class KsdlParser {
 		
 		this.parsers = new ArrayList<>();
 			parsers.add(new SchemeParser());
+			parsers.add(new BindParser());
 	}
 	
-	public RootNodeList parse(Collection<?> objs) {
-		
-		RootNodeList result = new RootNodeList();
-		
-		objs.forEach(obj -> result.add(this.parse(obj)));
-		
-		return result;
-	}
-	
-	public KsdlRootNode parse(Object obj) {
+	public <T extends KsdlRootNode> T parse(Object obj, Class<T> targetNode) {
 		
 		for(KsdlRootNodeParser parser : parsers) {
 			
-			if(parser.isMatch(obj)) {
+			if(parser.isMatch(obj) && parser.getNodeClass() == targetNode) {
 				
-				return parser.parse(obj);
+				return (T) parser.parse(obj);
 			}
 		}
 		

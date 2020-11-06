@@ -70,7 +70,7 @@ public class PropagationMetaline extends PropertyMetalineBase {
 					seq.add(KeyWordToken.OPEN_BLOCK);
 				
 					seq.add(new NameToken(from));
-					seq.add(KeyWordToken.FORWARD_DIRECTION);
+					seq.add(KeyWordToken.TO);
 					seq.add(new NameToken(to));
 				
 					seq.add(KeyWordToken.CLOSE_BLOCK);
@@ -105,14 +105,14 @@ public class PropagationMetaline extends PropertyMetalineBase {
 					seq.add(KeyWordToken.OPEN_BLOCK);
 					
 					seq.add(new NameToken(root));
-					seq.add(KeyWordToken.FORWARD_DIRECTION);
+					seq.add(KeyWordToken.TO);
 					seq.add(new NameToken(head));
 					
 					while(propagationMap.containsKey(head)) {
 						
 						head = propagationMap.get(head);
 						
-						seq.add(KeyWordToken.FORWARD_DIRECTION);
+						seq.add(KeyWordToken.TO);
 						seq.add(new NameToken(head));
 					}
 					

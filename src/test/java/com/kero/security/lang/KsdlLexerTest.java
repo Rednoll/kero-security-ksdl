@@ -39,7 +39,7 @@ public class KsdlLexerTest {
 		assertTrue(seq.get(10) instanceof NameToken);
 		assertEquals(seq.get(11), KeyWordToken.OPEN_BLOCK);
 		assertTrue(seq.get(12) instanceof NameToken);
-		assertEquals(seq.get(13), KeyWordToken.FORWARD_DIRECTION);
+		assertEquals(seq.get(13), KeyWordToken.TO);
 		assertTrue(seq.get(14) instanceof NameToken);
 		assertEquals(seq.get(15), KeyWordToken.CLOSE_BLOCK);
 		assertEquals(seq.get(16), KeyWordToken.CLOSE_BLOCK);

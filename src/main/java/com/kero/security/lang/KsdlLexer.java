@@ -44,7 +44,24 @@ public class KsdlLexer {
 
 		StringBuilder currentRawToken = new StringBuilder();
 
-		for(char cursor : data.toCharArray()) {
+		char[] chars = data.toCharArray();
+		
+		for(int i = 0; i < chars.length; i++) {
+
+			char cursor = chars[i];
+			
+			if(cursor == '#') {
+		
+				while(cursor != '\n') {
+					
+					i++;
+					cursor = chars[i];
+				}
+				
+				//skip \n
+				i++;
+				cursor = chars[i];
+			}
 			
 			checkLexem(tokens, currentRawToken, cursor);
 
