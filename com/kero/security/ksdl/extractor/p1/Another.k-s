@@ -1,0 +1,10 @@
+scheme Another {
+
+}
+
+scheme AnotherASub {
+
+}
+
+bind Another to com.kero.security.ksdl.extractor.p1.Another
+bind AnotherASub to com.kero.security.ksdl.extractor.p1.impl.AnotherASub

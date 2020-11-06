@@ -1,0 +1,22 @@
+scheme Root(D) {
+
+  name(G): +OWNER -FRIEND
+    - propagation: OWNER -> FRIEND
+}
+
+scheme RootASub {
+
+}
+
+scheme RootBSub {
+
+}
+
+scheme RootBSubSub {
+
+}
+
+bind Root to com.kero.security.ksdl.extractor.p1.Root
+bind RootASub to com.kero.security.ksdl.extractor.p1.impl.RootASub
+bind RootBSub to com.kero.security.ksdl.extractor.p1.impl.RootBSub
+bind RootBSubSub to com.kero.security.ksdl.extractor.p1.impl.RootBSubSub

@@ -23,7 +23,7 @@ public class RootNodeListTest {
 	public static class TestRootNode1 implements KsdlRootNode {
 
 		@Override
-		public TokenSequence tokenize() {
+		public String toText() {
 			
 			return null;
 		}
@@ -32,7 +32,7 @@ public class RootNodeListTest {
 	public static class TestRootNode2 implements KsdlRootNode {
 		
 		@Override
-		public TokenSequence tokenize() {
+		public String toText() {
 			
 			return null;
 		}

@@ -10,9 +10,9 @@ public enum DefaultAccessNode implements KsdlNode {
 	
 	EMPTY {
 	
-		public TokenSequence tokenize() {
+		public String toText() {
 			
-			return new TokenSequence(DefaultAccessToken.EMPTY);
+			return "";
 		}
 		
 		public void interpret(KeroAccessAgent manager, DefaultAccessOwner target) {
@@ -22,9 +22,9 @@ public enum DefaultAccessNode implements KsdlNode {
 	},
 	GRANT {
 	
-		public TokenSequence tokenize() {
+		public String toText() {
 			
-			return new TokenSequence(DefaultAccessToken.GRANT);
+			return "(G)";
 		}
 		
 		public void interpret(KeroAccessAgent manager, DefaultAccessOwner target) {
@@ -34,9 +34,9 @@ public enum DefaultAccessNode implements KsdlNode {
 	},
 	DENY {
 	
-		public TokenSequence tokenize() {
+		public String toText() {
 			
-			return new TokenSequence(DefaultAccessToken.DENY);
+			return "(D)";
 		}
 		
 		public void interpret(KeroAccessAgent manager, DefaultAccessOwner target) {

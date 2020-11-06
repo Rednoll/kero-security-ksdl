@@ -6,9 +6,7 @@ import com.kero.security.ksdl.resource.KsdlWritableResource;
 import com.kero.security.ksdl.resource.additionals.ResourceAddress;
 import com.kero.security.ksdl.resource.repository.KsdlWritableResourceRepository;
 import com.kero.security.ksdl.script.KsdlScript;
-import com.kero.security.lang.KsdlSpeaker;
 import com.kero.security.lang.collections.RootNodeList;
-import com.kero.security.lang.collections.TokenSequence;
 
 public class TextualWriter implements KsdlWriter {
 
@@ -30,14 +28,12 @@ public class TextualWriter implements KsdlWriter {
 	public void write(KsdlScript script) {
 	
 		ResourceAddress target = script.getAddress();
-		RootNodeList roots = script.getContent();
+		RootNodeList content = script.getContent();
 		
 		KsdlWritableResource<String> resource = repository.getOrCreateResource(target);
 		
-		TokenSequence sequence = roots.tokenize();
+		String data = content.toText();
 		
-		String rawData = KsdlSpeaker.getInstance().say(sequence);
-		
-		resource.writeData(rawData);
+		resource.writeData(data);
 	}
 }

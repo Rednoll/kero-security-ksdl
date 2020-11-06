@@ -59,7 +59,7 @@ public class DefaultExtractor implements KsdlExtractor {
 	
 	protected KsdlScript createScript(ResourceAddress address, AccessScheme rootScheme, List<AccessScheme> schemes) {
 		
-		return createScriptBindUp(address, rootScheme, schemes);
+		return createScriptBindDown(address, rootScheme, schemes);
 	}
 	
 	protected KsdlScript createScriptRound(ResourceAddress address, AccessScheme rootScheme, List<AccessScheme> schemes) {

@@ -3,8 +3,10 @@ package com.kero.security.lang.nodes;
 import java.util.Collections;
 import java.util.List;
 
+import com.kero.security.core.access.Access;
 import com.kero.security.core.agent.KeroAccessAgent;
 import com.kero.security.core.scheme.AccessScheme;
+import com.kero.security.lang.KsdlSpeaker;
 import com.kero.security.lang.collections.TokenSequence;
 import com.kero.security.lang.tokens.KeyWordToken;
 import com.kero.security.lang.tokens.NameToken;
@@ -34,32 +36,29 @@ public class SchemeNode extends KsdlNodeBase implements KsdlRootNode {
 	
 	}
 	
-	@Override
-	public TokenSequence tokenize() {
+	public String toText() {
 		
-		TokenSequence seq = new TokenSequence();
-			seq.add(KeyWordToken.SCHEME);
-			seq.add(new NameToken(this.name));
-			seq.add(this.defaultAccess.tokenize());
+		StringBuilder builder = new StringBuilder();
+		
+			builder.append("\n");
+		
+			builder.append("scheme "+this.name);
+		
+			builder.append(this.defaultAccess.toText());
 			
-			if(parentName != null && !parentName.isEmpty()) {
-				
-				seq.add(KeyWordToken.EXTENDS);
-				seq.add(new NameToken(parentName));
-			}
+			builder.append(" {\n\n");
 			
-			if(this.properties.size() > 0) {
+				StringBuilder propertiesBuilder = new StringBuilder();
 				
-				seq.add(KeyWordToken.OPEN_BLOCK);
+					this.properties.forEach(property -> propertiesBuilder.append(property.toText()));
 				
-				this.properties.forEach(prop -> seq.add(prop.tokenize()));
-				
-				seq.add(KeyWordToken.CLOSE_BLOCK);
-			}
+				builder.append(KsdlSpeaker.getInstance().addIndentTo(propertiesBuilder.toString()));
 			
-		return seq;
+			builder.append("}\n");
+			
+		return builder.toString();
 	}
-	
+
 	public void interpret(KeroAccessAgent manager) {
 		
 		AccessScheme scheme = manager.getSchemeByName(this.name);

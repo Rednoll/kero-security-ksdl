@@ -7,6 +7,7 @@ import com.kero.security.core.agent.KeroAccessAgent;
 import com.kero.security.core.property.Property;
 import com.kero.security.core.role.storage.RoleStorage;
 import com.kero.security.core.scheme.AccessScheme;
+import com.kero.security.lang.KsdlSpeaker;
 import com.kero.security.lang.collections.TokenSequence;
 import com.kero.security.lang.nodes.metaline.PropertyMetalineBase;
 import com.kero.security.lang.tokens.KeyWordToken;
@@ -31,25 +32,31 @@ public class PropertyNode extends KsdlNodeBase {
 		this.roleRules = roleRules;
 		this.metalines = metalines;
 	}
-
-	public TokenSequence tokenize() {
+	
+	public String toText() {
 		
-		TokenSequence seq = new TokenSequence();
-			seq.add(new NameToken(this.getName()));
-			seq.add(this.getDefaultAccess().tokenize());
+		StringBuilder builder = new StringBuilder();
+		
+			builder.append(this.getName());
 			
-			if(this.getRoleRules().size() > 0) {
+			builder.append(this.defaultAccess.toText());
+			
+			if(roleRules.size() > 0) {
 				
-				seq.add(KeyWordToken.OPEN_BLOCK);
+				builder.append(":");
 				
-				this.getRoleRules().forEach(ruleNode -> seq.add(ruleNode.tokenize()));
+				roleRules.forEach(roleRule -> builder.append(" "+roleRule.toText()));
 				
-				seq.add(KeyWordToken.CLOSE_BLOCK);
+				builder.append("\n");
 			}
 			
-			this.getMetalines().forEach(line -> seq.add(line.tokenize()));
+			StringBuilder metalinesBuilder = new StringBuilder();
 			
-		return seq;
+				metalines.forEach(metaline -> metalinesBuilder.append(metaline.toText()));
+			
+			builder.append(KsdlSpeaker.getInstance().addIndentTo(metalinesBuilder.toString()));
+				
+		return builder.toString();
 	}
 	
 	public void interpret(AccessScheme scheme) {
@@ -93,13 +100,13 @@ public class PropertyNode extends KsdlNodeBase {
 			
 		}
 		
-		public TokenSequence tokenize() {
-
-			return new TokenSequence();
-		}
-		
 		public void interpret(AccessScheme scheme) {
 
+		}
+		
+		public String toText() {
+		
+			return "";
 		}
 		
 		public List<PropertyMetalineBase> getMetalines() {

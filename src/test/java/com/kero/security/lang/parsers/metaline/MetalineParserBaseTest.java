@@ -52,9 +52,10 @@ public class MetalineParserBaseTest {
 	public static class TestNode implements MetalineNode {
 
 		@Override
-		public TokenSequence tokenize() {
+		public String toText() {
 			
 			return null;
 		}
+
 	}
 }

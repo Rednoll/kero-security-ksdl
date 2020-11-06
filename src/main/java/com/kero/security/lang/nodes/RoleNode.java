@@ -35,10 +35,11 @@ public class RoleNode extends KsdlNodeBase {
 		RoleNode other = (RoleNode) obj;
 		return access == other.access && Objects.equals(name, other.name);
 	}
-
-	public TokenSequence tokenize() {
+	
+	@Override
+	public String toText() {
 		
-		return new TokenSequence(new RoleToken(this.name, access == Access.GRANT));
+		return( access == Access.GRANT ? "+" : "-") + this.name;
 	}
 	
 	public void interpret(Property prop, RoleStorage roleStorage) {

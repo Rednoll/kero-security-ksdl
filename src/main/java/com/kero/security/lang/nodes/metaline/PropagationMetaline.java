@@ -7,13 +7,10 @@ import java.util.Map;
 import com.kero.security.core.agent.KeroAccessAgent;
 import com.kero.security.core.property.Property;
 import com.kero.security.core.role.Role;
-import com.kero.security.lang.collections.TokenSequence;
-import com.kero.security.lang.tokens.KeyWordToken;
-import com.kero.security.lang.tokens.NameToken;
 
 public class PropagationMetaline extends PropertyMetalineBase {
 
-	public static TokenizeStrategy TOKENIZE_STRATEGY = DefaultTokenizeStrategy.FULL_BRANCHES;
+	public static TokenizeStrategy TOTEXT_STYLE = DefaultTokenizeStrategy.FULL_BRANCHES;
 	
 	private Map<String, String> propagationMap;
 	
@@ -22,17 +19,13 @@ public class PropagationMetaline extends PropertyMetalineBase {
 		this.propagationMap = propagationMap;
 	}
 	
-	public TokenSequence tokenize() {
+	@Override
+	public String toText() {
 		
-		TokenSequence seq = new TokenSequence();
-		
-		if(propagationMap.isEmpty()) return seq;
-		
-		seq.addAll(TOKENIZE_STRATEGY.tokenize(propagationMap));
-
-		return seq;
+		return TOTEXT_STYLE.toText(this.propagationMap);
 	}
-	
+
+	@Override
 	public void interpret(KeroAccessAgent manager, Property property) {
 		
 		propagationMap.forEach((fromName, toName)-> {
@@ -51,7 +44,7 @@ public class PropagationMetaline extends PropertyMetalineBase {
 
 	public static interface TokenizeStrategy {
 		
-		public TokenSequence tokenize(Map<String, String> propagationMap);
+		public String toText(Map<String, String> propagationMap);
 	}
 	
 	public static enum DefaultTokenizeStrategy implements TokenizeStrategy {
@@ -59,67 +52,52 @@ public class PropagationMetaline extends PropertyMetalineBase {
 		PAIR {
 
 			@Override
-			public TokenSequence tokenize(Map<String, String> propagationMap) {
+			public String toText(Map<String, String> propagationMap) {
 				
-				TokenSequence seq = new TokenSequence();
-				
-				propagationMap.forEach((from, to)-> {
+				StringBuilder builder = new StringBuilder();
 					
-					seq.add(KeyWordToken.METALINE);
-					seq.add(new NameToken("propagation"));
-					seq.add(KeyWordToken.OPEN_BLOCK);
+					propagationMap.forEach((from, to)-> {
+						
+						builder.append("- propagation: "+ from + " -> " + to + "\n");
+					});
 				
-					seq.add(new NameToken(from));
-					seq.add(KeyWordToken.TO);
-					seq.add(new NameToken(to));
-				
-					seq.add(KeyWordToken.CLOSE_BLOCK);
-				});
-				
-				return seq;
+				return builder.toString();
 			}
 		},
 		FULL_BRANCHES {
 			
 			@Override
-			public TokenSequence tokenize(Map<String, String> propagationMap) {
+			public String toText(Map<String, String> propagationMap) {
 				
-				TokenSequence seq = new TokenSequence();
+				StringBuilder builder = new StringBuilder();
 				
-				List<String> roots = new ArrayList<>();
-				
-					propagationMap.forEach((from, to)-> {
-						
-						if(!propagationMap.values().contains(from)) {
+					List<String> roots = new ArrayList<>();
+					
+						propagationMap.forEach((from, to)-> {
 							
-							roots.add(from);
+							if(!propagationMap.values().contains(from)) {
+								
+								roots.add(from);
+							}
+						});
+					
+					for(String root : roots) {
+						
+						String head = propagationMap.get(root);
+						
+						builder.append("- propagation: "+ root + " -> " + head);
+						
+						while(propagationMap.containsKey(head)) {
+							
+							head = propagationMap.get(head);
+						
+							builder.append(" -> " + head);
 						}
-					});
-				
-				for(String root : roots) {
-					
-					String head = propagationMap.get(root);
-					
-					seq.add(KeyWordToken.METALINE);
-					seq.add(new NameToken("propagation"));
-					seq.add(KeyWordToken.OPEN_BLOCK);
-					
-					seq.add(new NameToken(root));
-					seq.add(KeyWordToken.TO);
-					seq.add(new NameToken(head));
-					
-					while(propagationMap.containsKey(head)) {
 						
-						head = propagationMap.get(head);
-						
-						seq.add(KeyWordToken.TO);
-						seq.add(new NameToken(head));
+						builder.append("\n");
 					}
 					
-					seq.add(KeyWordToken.CLOSE_BLOCK);
-				}
-					
-				return seq;
+				return builder.toString();
 			}
 		};
 	}

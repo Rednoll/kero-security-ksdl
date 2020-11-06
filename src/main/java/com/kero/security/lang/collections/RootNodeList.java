@@ -2,7 +2,6 @@ package com.kero.security.lang.collections;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import com.kero.security.lang.nodes.KsdlRootNode;
@@ -17,13 +16,17 @@ public class RootNodeList extends ArrayList<KsdlRootNode> {
 		return this.addAll(list);
 	}
 	
-	public TokenSequence tokenize() {
+	public String toText() {
 		
-		TokenSequence seq = new TokenSequence();
+		StringBuilder builder = new StringBuilder();
 		
-		this.forEach(node -> seq.add(node.tokenize()));
+			forEach(root -> builder.append(root.toText()+"\n"));
 		
-		return seq;
+		String data = builder.toString();;
+			data = data.trim();
+			data = data.replaceAll("\n{3,}", "\n\n");
+			
+		return data;
 	}
 	
 	public SchemeNodeMap getSchemeNodes() {
