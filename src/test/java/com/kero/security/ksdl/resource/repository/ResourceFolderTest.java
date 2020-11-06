@@ -16,6 +16,7 @@ import org.junit.jupiter.api.Test;
 import com.google.common.jimfs.Configuration;
 import com.google.common.jimfs.Jimfs;
 import com.kero.security.ksdl.resource.FileResource;
+import com.kero.security.ksdl.resource.KsdlWritableResource;
 import com.kero.security.ksdl.resource.additionals.ResourceAddress;
 import com.kero.security.ksdl.resource.repository.TextResourceFolder;
 
@@ -42,14 +43,14 @@ public class ResourceFolderTest {
 		
 		TextResourceFolder folder = new TextResourceFolder(root);
 	
-		List<FileResource<String>> resources = new ArrayList<>(folder.getAll());
+		List<KsdlWritableResource<String>> resources = new ArrayList<>(folder.getAll());
 		
 		assertEquals(resources.size(), 2);
 		assertTrue(resources.get(0).readData().equals("text1") || resources.get(0).readData().equals("text2"));
 		assertTrue(resources.get(1).readData().equals("text1") || resources.get(1).readData().equals("text2"));
 		
-		FileResource<String> res1 = folder.getResource(new ResourceAddress("file1"));
-		FileResource<String> res2 = folder.getResource(new ResourceAddress("sub.file2"));
+		KsdlWritableResource<String> res1 = folder.getResource(new ResourceAddress("file1"));
+		KsdlWritableResource<String> res2 = folder.getResource(new ResourceAddress("sub.file2"));
 	
 		assertEquals(res1.readData(), "text1");
 		assertEquals(res2.readData(), "text2");
@@ -76,14 +77,14 @@ public class ResourceFolderTest {
 		
 		TextResourceFolder folder = new TextResourceFolder(root);
 	
-		List<FileResource<String>> resources = new ArrayList<>(folder.getAll());
+		List<KsdlWritableResource<String>> resources = new ArrayList<>(folder.getAll());
 		
 		assertEquals(resources.size(), 2);
 		assertTrue(resources.get(0).readData().equals("text1") || resources.get(0).readData().equals("text2"));
 		assertTrue(resources.get(1).readData().equals("text1") || resources.get(1).readData().equals("text2"));
 		
-		FileResource<String> res1 = folder.getResource(new ResourceAddress("file1"));
-		FileResource<String> res2 = folder.getResource(new ResourceAddress("sub.file2"));
+		KsdlWritableResource<String> res1 = folder.getResource(new ResourceAddress("file1"));
+		KsdlWritableResource<String> res2 = folder.getResource(new ResourceAddress("sub.file2"));
 	
 		assertEquals(res1.readData(), "text1");
 		assertEquals(res2.readData(), "text2");

@@ -25,6 +25,25 @@ public class TokenSequence extends LinkedList<KsdlToken> {
 		this.addAll(Arrays.asList(tokens));
 	}
 	
+	public <T extends KsdlToken> void consume(T token) {
+		
+		if(token instanceof Enum && token.getClass().getSuperclass() != Enum.class) {
+			
+			tryPoll((Class<T>) token.getClass().getSuperclass());
+		}
+		else {
+	
+			tryPoll(token.getClass());
+		}
+	}
+	
+	public <T extends KsdlToken> T tryPoll(Class<T> clazz) {
+		
+		if(!clazz.isAssignableFrom(this.peek().getClass())) throw new RuntimeException("Incorrect token: "+clazz);
+		
+		return (T) this.poll();
+	}
+	
 	public boolean add(TokenSequence seq) {
 		
 		return this.addAll(seq);
@@ -32,7 +51,14 @@ public class TokenSequence extends LinkedList<KsdlToken> {
 	
 	public <T extends KsdlToken> T tryGetOrDefault(T def) {
 		
-		return tryGetOrDefault((Class<T>) def.getClass(), def);
+		if(def instanceof Enum && def.getClass().getSuperclass() != Enum.class) {
+			
+			return tryGetOrDefault((Class<T>) def.getClass().getSuperclass(), def);
+		}
+		else {
+	
+			return tryGetOrDefault((Class<T>) def.getClass(), def);
+		}
 	}
 	
 	public <T extends KsdlToken> T tryGetOrDefault(Class<T> tokenClass, T def) {

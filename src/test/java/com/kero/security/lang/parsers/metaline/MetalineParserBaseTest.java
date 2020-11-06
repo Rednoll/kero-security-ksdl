@@ -41,6 +41,12 @@ public class MetalineParserBaseTest {
 			
 			return null;
 		}
+
+		@Override
+		public boolean isMatch(Property obj) {
+			
+			return false;
+		}
 	}
 	
 	public static class TestNode implements MetalineNode {

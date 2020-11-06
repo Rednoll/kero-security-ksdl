@@ -1,20 +1,19 @@
-package com.kero.security.lang.parsers.metaline;
+package com.kero.security.lang.speakers.metalines;
 
 import com.kero.security.lang.collections.TokenSequence;
-import com.kero.security.lang.nodes.metaline.MetalineNode;
-import com.kero.security.lang.parsers.KsdlNodeParserBase;
 import com.kero.security.lang.tokens.KeyWordToken;
 import com.kero.security.lang.tokens.NameToken;
 
-public abstract class MetalineParserBase<S, T extends MetalineNode> extends KsdlNodeParserBase<S, T> implements MetalineParser<S, T> {
+public abstract class MetalineSpeakerBase implements MetalineSpeaker {
 
 	protected String name;
 	
-	public MetalineParserBase(String name) {
+	public MetalineSpeakerBase(String name) {
 		
 		this.name = name;
 	}
 	
+	@Override
 	public boolean isMatch(TokenSequence tokens) {
 	
 		if(!tokens.isToken(0, KeyWordToken.METALINE)) return false;

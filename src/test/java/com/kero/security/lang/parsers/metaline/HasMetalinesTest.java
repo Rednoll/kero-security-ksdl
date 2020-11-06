@@ -101,6 +101,12 @@ public class HasMetalinesTest {
 			
 			this.node = node;
 		}
+
+		@Override
+		public boolean isMatch(Object obj) {
+			
+			return false;
+		}
 	}
 	
 	public static class OpenTestParser implements MetalineParser {
@@ -133,6 +139,12 @@ public class HasMetalinesTest {
 		public void setNode(MetalineNode node) {
 			
 			this.node = node;
+		}
+
+		@Override
+		public boolean isMatch(Object obj) {
+			
+			return false;
 		}
 	}
 }

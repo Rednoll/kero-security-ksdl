@@ -1,5 +1,6 @@
 package com.kero.security.lang.nodes;
 
+import java.util.Collections;
 import java.util.List;
 
 import com.kero.security.core.agent.KeroAccessAgent;
@@ -13,6 +14,8 @@ import com.kero.security.lang.tokens.NameToken;
 
 public class PropertyNode extends KsdlNodeBase {
 
+	public static PropertyNode EMPTY = new Empty();
+	
 	private String name;
 	private DefaultAccessNode defaultAccess;
 	
@@ -81,5 +84,42 @@ public class PropertyNode extends KsdlNodeBase {
 	public String getName() {
 		
 		return this.name;
+	}
+	
+	private static class Empty extends PropertyNode {
+
+		public Empty() {
+			super(null, null, null, null);
+			
+		}
+		
+		public TokenSequence tokenize() {
+
+			return new TokenSequence();
+		}
+		
+		public void interpret(AccessScheme scheme) {
+
+		}
+		
+		public List<PropertyMetalineBase> getMetalines() {
+			
+			return Collections.emptyList();
+		}
+		
+		public List<RoleNode> getRoleRules() {
+			
+			return Collections.emptyList();
+		}
+		
+		public DefaultAccessNode getDefaultAccess() {
+			
+			return null;
+		}
+		
+		public String getName() {
+			
+			return null;
+		}
 	}
 }

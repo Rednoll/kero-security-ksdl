@@ -5,6 +5,8 @@ import org.mockito.Mockito;
 
 import com.kero.security.core.scheme.AccessScheme;
 import com.kero.security.ksdl.reader.KsdlReader;
+import com.kero.security.ksdl.script.KsdlScript;
+import com.kero.security.ksdl.script.ScriptList;
 import com.kero.security.lang.collections.RootNodeList;
 import com.kero.security.lang.nodes.SchemeNode;
 
@@ -20,8 +22,15 @@ public class KsdlAccessSchemeConfiguratorTest {
 				
 			roots.add(node);
 		
+		ScriptList scriptsList = new ScriptList();
+		
+			KsdlScript script = Mockito.mock(KsdlScript.class);
+				Mockito.when(script.getContent()).thenReturn(roots);
+		
+				scriptsList.add(script);
+				
 		KsdlReader provider = Mockito.mock(KsdlReader.class);
-		Mockito.when(provider.readRoots()).thenReturn(roots);
+		Mockito.when(provider.readAll()).thenReturn(scriptsList);
 		
 		AccessScheme schemeMock = Mockito.mock(AccessScheme.class);
 		Mockito.when(schemeMock.getName()).thenReturn("TestScheme");

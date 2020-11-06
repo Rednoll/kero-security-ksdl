@@ -19,7 +19,8 @@ public class FileTextResource extends FileResource<String> {
 		
 		try {
 			
-			Files.write(this.path, text.getBytes(), StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.WRITE);
+			Files.createDirectories(this.path.getParent());
+			Files.write(this.path, text.getBytes(), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
 		}
 		catch(IOException e) {
 			

@@ -14,6 +14,11 @@ public class RoleToken extends KsdlTokenBase {
 		this.accessible = accessible;
 	}
 	
+	public String toText() {
+		
+		return (accessible ? "+" : "-") + this.roleName;
+	}
+	
 	public RoleNode toNode() {
 		
 		return new RoleNode(this.roleName, accessible ? Access.GRANT : Access.DENY);

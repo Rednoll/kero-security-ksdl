@@ -24,9 +24,9 @@ public interface HasMetalines<N extends MetalineNode> {
 	
 	public default N parseLine(TokenSequence tokens) {
 
-		List<? extends MetalineParser<? extends N>> parsers = getMetalineParsers();
+		List<? extends MetalineParser<?, ? extends N>> parsers = getMetalineParsers();
 
-		for(MetalineParser<? extends N> parser : parsers) {
+		for(MetalineParser<?, ? extends N> parser : parsers) {
 			
 			if(parser.isMatch(tokens)) {
 				
@@ -37,5 +37,5 @@ public interface HasMetalines<N extends MetalineNode> {
 		throw new ParserNotFoundException("Can't find parser for metaline!");
 	}
 	
-	public List<? extends MetalineParser<? extends N>> getMetalineParsers();
+	public List<? extends MetalineParser<?, ? extends N>> getMetalineParsers();
 }

@@ -1,4 +1,4 @@
-package com.kero.security.ksdl.writer;
+package com.kero.security.lang;
 
 import org.junit.jupiter.api.Test;
 
@@ -8,19 +8,19 @@ import com.kero.security.lang.tokens.KeyWordToken;
 import com.kero.security.lang.tokens.NameToken;
 import com.kero.security.lang.tokens.RoleToken;
 
-public class TextualWriterTest {
+public class KsdlSpeakerTest {
 
 	@Test
-	public void test() {
+	public void say() {
 		
-		TextualWriter writer = new TextualWriter(null);
+		KsdlSpeaker speaker = KsdlSpeaker.getInstance();
 	
 		TokenSequence seq = new TokenSequence();
 			seq.add(KeyWordToken.SCHEME);
 			seq.add(new NameToken("TestScheme"));
 			seq.add(DefaultAccessToken.DENY);
 			seq.add(KeyWordToken.OPEN_BLOCK);
-			seq.add(new NameToken("testProp"));
+			seq.add(new NameToken("text"));
 			seq.add(DefaultAccessToken.GRANT);
 			seq.add(KeyWordToken.OPEN_BLOCK);
 			seq.add(new RoleToken("OWNER", true));
@@ -32,11 +32,9 @@ public class TextualWriterTest {
 			seq.add(new NameToken("OWNER"));
 			seq.add(KeyWordToken.FORWARD_DIRECTION);
 			seq.add(new NameToken("FRIEND"));
-			seq.add(KeyWordToken.FORWARD_DIRECTION);
-			seq.add(new NameToken("COMMON"));
 			seq.add(KeyWordToken.CLOSE_BLOCK);
 			seq.add(KeyWordToken.CLOSE_BLOCK);
-			
-		System.out.println(writer.delex(seq));
+	
+		System.out.print(speaker.say(seq));
 	}
 }

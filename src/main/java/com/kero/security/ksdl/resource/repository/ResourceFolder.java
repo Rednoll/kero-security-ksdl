@@ -1,10 +1,8 @@
 package com.kero.security.ksdl.resource.repository;
 
-import java.io.File;
 import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
@@ -12,10 +10,11 @@ import java.util.Set;
 import java.util.regex.Matcher;
 
 import com.kero.security.ksdl.resource.FileResource;
+import com.kero.security.ksdl.resource.KsdlWritableResource;
 import com.kero.security.ksdl.resource.additionals.ResourceAddress;
 import com.kero.security.ksdl.resource.exception.FileResourceIOException;
 
-public abstract class ResourceFolder<T> implements KsdlWritableResourceRepository<FileResource<T>> {
+public abstract class ResourceFolder<T> implements KsdlWritableResourceRepository<KsdlWritableResource<T>> {
 
 	protected Path path;
 	protected Set<String> suffixes;
@@ -36,12 +35,12 @@ public abstract class ResourceFolder<T> implements KsdlWritableResourceRepositor
 		
 	}
 	
-	protected abstract FileResource<T> getResource(Path path);
+	protected abstract KsdlWritableResource<T> getResource(Path path);
 	
 	@Override
-	public Collection<FileResource<T>> getAll() {
+	public Collection<KsdlWritableResource<T>> getAll() {
 		
-		Collection<FileResource<T>> resources = new HashSet<>();
+		Collection<KsdlWritableResource<T>> resources = new HashSet<>();
 		
 		try {
 			
@@ -77,7 +76,7 @@ public abstract class ResourceFolder<T> implements KsdlWritableResourceRepositor
 	}
  
 	@Override
-	public FileResource<T> getResource(ResourceAddress address) {
+	public KsdlWritableResource<T> getResource(ResourceAddress address) {
 		
 		if(!hasResource(address)) throw new RuntimeException("Resource with address: "+address+" not found!");
 		

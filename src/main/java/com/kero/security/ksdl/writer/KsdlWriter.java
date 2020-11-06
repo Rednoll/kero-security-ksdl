@@ -1,9 +1,11 @@
 package com.kero.security.ksdl.writer;
 
-import com.kero.security.ksdl.resource.additionals.ResourceAddress;
-import com.kero.security.lang.collections.RootNodeList;
+import java.util.Collection;
+
+import com.kero.security.ksdl.script.KsdlScript;
 
 public interface KsdlWriter {
 
-	public void write(ResourceAddress target, RootNodeList roots);
+	public void writeAll(Collection<KsdlScript> scripts);
+	public void write(KsdlScript script);
 }

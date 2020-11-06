@@ -12,6 +12,7 @@ import org.mockito.Mockito;
 import com.kero.security.ksdl.reader.TextualReader;
 import com.kero.security.ksdl.resource.KsdlResource;
 import com.kero.security.ksdl.resource.repository.KsdlResourceRepository;
+import com.kero.security.ksdl.script.ScriptList;
 import com.kero.security.lang.collections.RootNodeList;
 import com.kero.security.lang.nodes.SchemeNode;
 
@@ -36,7 +37,9 @@ public class TextualReaderTest {
 		
 		TextualReader provider = new TextualReader(repository);
 	
-		RootNodeList roots = provider.readRoots();
+		ScriptList scripts = provider.readAll();
+		
+		RootNodeList roots = scripts.get(0).getContent();
 		
 		assertEquals(roots.size(), 1);
 		assertTrue(roots.get(0) instanceof SchemeNode);

@@ -19,7 +19,7 @@ import com.kero.security.lang.tokens.RoleToken;
 
 public class PropertyParser extends KsdlNodeParserBase<Property, PropertyNode> implements HasBlock<RoleToken>, HasMetalines<PropertyMetalineBase> {
 
-	private List<MetalineParser<? extends PropertyMetalineBase>> metalineParsers = new ArrayList<>();
+	private List<MetalineParser<Property, ? extends PropertyMetalineBase>> metalineParsers = new ArrayList<>();
 	
 	public PropertyParser() {
 	
@@ -43,7 +43,18 @@ public class PropertyParser extends KsdlNodeParserBase<Property, PropertyNode> i
 		
 		List<PropertyMetalineBase> metalines = new ArrayList<>();
 		
-			metalineParsers.forEach(parser -> metalines.add(parser.parse(property)));
+			metalineParsers.forEach(parser -> {
+				
+				if(parser.isMatch(property)) {
+					
+					metalines.add(parser.parse(property));
+				}
+			});
+			
+		if(defaultAccess == DefaultAccessNode.EMPTY && roleRules.isEmpty() && metalines.isEmpty()) {
+			
+			return PropertyNode.EMPTY;
+		}
 		
 		return new PropertyNode(name, defaultAccess, roleRules, metalines);
 	}
@@ -73,7 +84,7 @@ public class PropertyParser extends KsdlNodeParserBase<Property, PropertyNode> i
 	}
 
 	@Override
-	public List<MetalineParser<? extends PropertyMetalineBase>> getMetalineParsers() {
+	public List<MetalineParser<Property, ? extends PropertyMetalineBase>> getMetalineParsers() {
 		
 		return metalineParsers;
 	}

@@ -18,6 +18,12 @@ public class PropagationParser extends MetalineParserBase<Property, PropagationM
 	}
 
 	@Override
+	public boolean isMatch(Property property) {
+		
+		return !property.getLocalRolesPropagation().isEmpty();
+	}
+	
+	@Override
 	public boolean isMatch(TokenSequence tokens) {
 		
 		boolean superMatch = super.isMatch(tokens);

@@ -17,6 +17,15 @@ public class RootNodeList extends ArrayList<KsdlRootNode> {
 		return this.addAll(list);
 	}
 	
+	public TokenSequence tokenize() {
+		
+		TokenSequence seq = new TokenSequence();
+		
+		this.forEach(node -> seq.add(node.tokenize()));
+		
+		return seq;
+	}
+	
 	public SchemeNodeMap getSchemeNodes() {
 		
 		SchemeNodeMap result = new SchemeNodeMap();
