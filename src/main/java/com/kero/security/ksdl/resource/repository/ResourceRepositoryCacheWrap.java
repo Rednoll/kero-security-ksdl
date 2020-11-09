@@ -14,6 +14,7 @@ public class ResourceRepositoryCacheWrap<T extends KsdlResource> implements Ksdl
 	private Collection<T> all;
 	
 	private Map<ResourceAddress, T> getResourceCache;
+	private Map<ResourceAddress, String> adaptAddress;
 	
 	public ResourceRepositoryCacheWrap(KsdlResourceRepository<T> original) {
 		
@@ -54,5 +55,11 @@ public class ResourceRepositoryCacheWrap<T extends KsdlResource> implements Ksdl
 	public T getResource(ResourceAddress address) {
 		
 		return getResourceCache.computeIfAbsent(address, original::getResource);
+	}
+
+	@Override
+	public String adaptAddress(ResourceAddress address) {
+	
+		return adaptAddress.computeIfAbsent(address, original::adaptAddress);
 	}
 }

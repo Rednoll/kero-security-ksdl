@@ -11,13 +11,14 @@ import org.mockito.Mockito;
 
 import com.kero.security.core.property.Property;
 import com.kero.security.lang.collections.TokenSequence;
+import com.kero.security.lang.exception.UnexpectedTokenException;
 import com.kero.security.lang.nodes.metaline.MetalineNode;
 import com.kero.security.lang.tokens.KeyWordToken;
 
 public class HasMetalinesTest {
 
 	@Test
-	public void test() {
+	public void test() throws UnexpectedTokenException {
 		
 		MetalineNode node1 = Mockito.mock(MetalineNode.class);
 		MetalineNode node2 = Mockito.mock(MetalineNode.class);
@@ -35,14 +36,14 @@ public class HasMetalinesTest {
 		SomeParser hasMetalines = new SomeParser(parsers);
 		
 		TokenSequence seq = new TokenSequence();
-			seq.add(KeyWordToken.METALINE);
-			seq.add(KeyWordToken.OPEN_BLOCK);
-			seq.add(KeyWordToken.OPEN_BLOCK);
-			seq.add(KeyWordToken.OPEN_BLOCK);
-			seq.add(KeyWordToken.METALINE);
-			seq.add(KeyWordToken.CLOSE_BLOCK);
-			seq.add(KeyWordToken.CLOSE_BLOCK);
-			seq.add(KeyWordToken.CLOSE_BLOCK);
+			seq.put(0, KeyWordToken.METALINE);
+			seq.put(1, KeyWordToken.OPEN_BLOCK);
+			seq.put(2, KeyWordToken.OPEN_BLOCK);
+			seq.put(3, KeyWordToken.OPEN_BLOCK);
+			seq.put(4, KeyWordToken.METALINE);
+			seq.put(5, KeyWordToken.CLOSE_BLOCK);
+			seq.put(6, KeyWordToken.CLOSE_BLOCK);
+			seq.put(7, KeyWordToken.CLOSE_BLOCK);
 		
 		List<MetalineNode> nodes = hasMetalines.parseMetalines(seq);
 	
@@ -77,7 +78,7 @@ public class HasMetalinesTest {
 		@Override
 		public boolean isMatch(TokenSequence tokens) {
 			
-			return tokens.get(1) == KeyWordToken.CLOSE_BLOCK;
+			return tokens.isToken(1, KeyWordToken.CLOSE_BLOCK);
 		}
 
 		@Override
@@ -87,12 +88,12 @@ public class HasMetalinesTest {
 		}
 		
 		@Override
-		public MetalineNode parse(TokenSequence tokens) {
+		public MetalineNode parse(TokenSequence tokens) throws UnexpectedTokenException {
 			
-			tokens.poll();
-			tokens.poll();
-			tokens.poll();
-			tokens.poll();
+			tokens.consume(KeyWordToken.METALINE);
+			tokens.consume(KeyWordToken.CLOSE_BLOCK);
+			tokens.consume(KeyWordToken.CLOSE_BLOCK);
+			tokens.consume(KeyWordToken.CLOSE_BLOCK);
 			
 			return node;
 		}
@@ -116,7 +117,7 @@ public class HasMetalinesTest {
 		@Override
 		public boolean isMatch(TokenSequence tokens) {
 		
-			return tokens.get(1) == KeyWordToken.OPEN_BLOCK;
+			return tokens.isToken(1, KeyWordToken.OPEN_BLOCK);
 		}
 		
 		@Override
@@ -126,12 +127,12 @@ public class HasMetalinesTest {
 		}
 
 		@Override
-		public MetalineNode parse(TokenSequence tokens) {
+		public MetalineNode parse(TokenSequence tokens) throws UnexpectedTokenException {
 		
-			tokens.poll();
-			tokens.poll();
-			tokens.poll();
-			tokens.poll();
+			tokens.consume(KeyWordToken.METALINE);
+			tokens.consume(KeyWordToken.OPEN_BLOCK);
+			tokens.consume(KeyWordToken.OPEN_BLOCK);
+			tokens.consume(KeyWordToken.OPEN_BLOCK);
 			
 			return node;
 		}

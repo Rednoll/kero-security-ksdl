@@ -35,9 +35,15 @@ public class TextResourceFolder extends ResourceFolder<String> {
 	@Override
 	public FileTextResource createResource(ResourceAddress address) {
 		
-		String addressPath = address.getRaw().replaceAll("\\"+ResourceAddress.SEPARATOR, Matcher.quoteReplacement(File.separator));
+		String addressPath = adaptAddress(address);
 			addressPath += suffixes.iterator().next();
 		
 		return new FileTextResource(this.path, Paths.get(this.path.toString(), addressPath));
+	}
+
+	@Override
+	public String adaptAddress(ResourceAddress address) {
+		
+		return address.getRaw().replaceAll("\\"+ResourceAddress.SEPARATOR, Matcher.quoteReplacement(path.getFileSystem().getSeparator()));
 	}
 }

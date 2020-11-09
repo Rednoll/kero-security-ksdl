@@ -4,13 +4,14 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.kero.security.lang.collections.TokenSequence;
+import com.kero.security.lang.exception.UnexpectedTokenException;
 import com.kero.security.lang.nodes.metaline.MetalineNode;
 import com.kero.security.lang.parsers.exceptions.ParserNotFoundException;
 import com.kero.security.lang.tokens.KeyWordToken;
 
 public interface HasMetalines<N extends MetalineNode> {
 
-	public default List<N> parseMetalines(TokenSequence tokens) {
+	public default List<N> parseMetalines(TokenSequence tokens) throws UnexpectedTokenException {
 		
 		List<N> metalines = new LinkedList<>();
 		
@@ -22,7 +23,7 @@ public interface HasMetalines<N extends MetalineNode> {
 		return metalines;
 	}
 	
-	public default N parseLine(TokenSequence tokens) {
+	public default N parseLine(TokenSequence tokens) throws UnexpectedTokenException {
 
 		List<? extends MetalineParser<?, ? extends N>> parsers = getMetalineParsers();
 

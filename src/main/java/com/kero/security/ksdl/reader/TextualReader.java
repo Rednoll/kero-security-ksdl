@@ -1,5 +1,6 @@
 package com.kero.security.ksdl.reader;
 
+import com.kero.security.ksdl.reader.exceptions.ReadException;
 import com.kero.security.ksdl.resource.KsdlResource;
 import com.kero.security.ksdl.resource.repository.KsdlResourceRepository;
 import com.kero.security.ksdl.script.BaseKsdlScript;
@@ -8,14 +9,15 @@ import com.kero.security.lang.KsdlLexer;
 import com.kero.security.lang.KsdlParser;
 import com.kero.security.lang.collections.RootNodeList;
 import com.kero.security.lang.collections.TokenSequence;
+import com.kero.security.lang.exception.UnexpectedTokenException;
 
 public class TextualReader extends KsdlReaderBase {
 
-	private KsdlResourceRepository<KsdlResource<String>> resources;
+	private KsdlResourceRepository<KsdlResource<String>> repository;
 	
-	public TextualReader(KsdlResourceRepository<KsdlResource<String>> resources) {
+	public TextualReader(KsdlResourceRepository<KsdlResource<String>> repository) {
 	
-		this.resources = resources;
+		this.repository = repository;
 	}
 	
 	@Override
@@ -23,15 +25,22 @@ public class TextualReader extends KsdlReaderBase {
 		
 		ScriptList scripts = new ScriptList();
 		
-		resources.getAll().forEach(resource -> {
+		repository.getAll().forEach(resource -> {
 			
 			String text = resource.readData();
 			
 			TokenSequence tokens = KsdlLexer.getInstance().tokenize(text);
 		
-			RootNodeList roots = KsdlParser.getInstance().parse(tokens);
+			try {
+				
+				RootNodeList roots = KsdlParser.getInstance().parse(tokens);
+				scripts.add(new BaseKsdlScript(resource.getAddress(), roots));
+			}
+			catch(UnexpectedTokenException e) {
 			
-			scripts.add(new BaseKsdlScript(resource.getAddress(), roots));
+				throw new ReadException(repository, resource, e);
+			}
+			
 		});
 
 		return scripts;

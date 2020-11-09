@@ -2,8 +2,8 @@ package com.kero.security.lang.nodes;
 
 public class BindNode extends KsdlNodeBase implements KsdlRootNode {
 
-	private String name;
-	private String className;
+	protected String name;
+	protected String className;
 	
 	public BindNode(String name, String className) {
 		

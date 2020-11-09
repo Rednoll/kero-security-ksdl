@@ -18,8 +18,7 @@ public abstract class MetalineParserBase<S, T extends MetalineNode> extends Ksdl
 	public boolean isMatch(TokenSequence tokens) {
 	
 		if(!tokens.isToken(0, KeyWordToken.METALINE)) return false;
-		if(!tokens.isToken(1, NameToken.class)) return false;
-		if(!((NameToken) tokens.get(1)).getRaw().equals(name)) return false;
+		if(!tokens.isToken(1, new NameToken(this.name))) return false;
 		
 		return true;
 	}

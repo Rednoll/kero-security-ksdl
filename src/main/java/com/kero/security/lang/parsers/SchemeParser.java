@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.kero.security.core.scheme.AccessScheme;
 import com.kero.security.lang.collections.TokenSequence;
+import com.kero.security.lang.exception.UnexpectedTokenException;
 import com.kero.security.lang.nodes.DefaultAccessNode;
 import com.kero.security.lang.nodes.PropertyNode;
 import com.kero.security.lang.nodes.SchemeNode;
@@ -53,9 +54,9 @@ public class SchemeParser extends KsdlNodeParserBase<AccessScheme, SchemeNode> i
 	}
 	
 	@Override
-	public SchemeNode parse(TokenSequence tokens) {
+	public SchemeNode parse(TokenSequence tokens) throws UnexpectedTokenException {
 	
-		tokens.poll(); //SCHEME
+		tokens.consume(KeyWordToken.SCHEME); //SCHEME
 		
 		NameToken nameToken = tokens.tryPoll(NameToken.class);
 		
@@ -63,8 +64,8 @@ public class SchemeParser extends KsdlNodeParserBase<AccessScheme, SchemeNode> i
 		
 		if(tokens.isToken(0, KeyWordToken.EXTENDS)) {
 		
-			tokens.poll(); // Extends
-			tokens.poll(); // Name
+			tokens.consume(KeyWordToken.EXTENDS); // Extends
+			tokens.consume(NameToken.class); // Name
 		}
 		
 		List<PropertyNode> props = this.parseBlock(tokens);
@@ -75,7 +76,7 @@ public class SchemeParser extends KsdlNodeParserBase<AccessScheme, SchemeNode> i
 	}
 	
 	@Override
-	public PropertyNode parseBlockUnit(TokenSequence tokens) {
+	public PropertyNode parseBlockUnit(TokenSequence tokens) throws UnexpectedTokenException {
 		
 		return propertyParser.parse(tokens);
 	}

@@ -13,6 +13,8 @@ public interface KsdlResourceRepository<T extends KsdlResource> {
 	
 	public String getName();
 	
+	public String adaptAddress(ResourceAddress address);
+	
 	public static boolean hasWrap(KsdlResourceRepository resource, Class<? extends KsdlResourceRepositoryWrap> wrapClass) {
 		
 		if(resource instanceof KsdlResourceRepositoryWrap) {

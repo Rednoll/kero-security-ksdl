@@ -18,8 +18,8 @@ public class MetalineParserBaseTest {
 		TestMetalineParser parser = new TestMetalineParser();
 	
 		TokenSequence seq = new TokenSequence();
-			seq.add(KeyWordToken.METALINE);
-			seq.add(new NameToken("test"));
+			seq.put(0, KeyWordToken.METALINE);
+			seq.put(1, new NameToken("test"));
 		
 		assertTrue(parser.isMatch(seq));
 	}

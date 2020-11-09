@@ -17,12 +17,12 @@ public class PropertyNode extends KsdlNodeBase {
 
 	public static PropertyNode EMPTY = new Empty();
 	
-	private String name;
-	private DefaultAccessNode defaultAccess;
+	protected String name;
+	protected DefaultAccessNode defaultAccess;
 	
-	private List<RoleNode> roleRules;
+	protected List<RoleNode> roleRules;
 	
-	private List<PropertyMetalineBase> metalines;
+	protected List<PropertyMetalineBase> metalines;
 	
 	public PropertyNode(String name, DefaultAccessNode defaultAccess, List<RoleNode> roleRules, List<PropertyMetalineBase> metalines) {
 		

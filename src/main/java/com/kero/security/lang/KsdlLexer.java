@@ -2,6 +2,8 @@ package com.kero.security.lang;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import com.kero.security.lang.collections.TokenSequence;
 import com.kero.security.lang.exception.KsdlLexerException;
@@ -32,15 +34,13 @@ public class KsdlLexer {
 		lexems.add(new NameLexem());
 	}
 	
-	public TokenSequence tokenize(String rawData) throws KsdlLexerException {
+	public TokenSequence tokenize(String data) throws KsdlLexerException {
 		
-		if(rawData == null || rawData.isEmpty()) return new TokenSequence();
-		
-		String data = prepareRawText(rawData);
+		if(data == null || data.isEmpty()) return new TokenSequence(data);
 		
 		int findShortEnd = 0;
 		
-		TokenSequence tokens = new TokenSequence();
+		TokenSequence tokens = new TokenSequence(data);
 
 		StringBuilder currentRawToken = new StringBuilder();
 
@@ -63,9 +63,9 @@ public class KsdlLexer {
 				cursor = chars[i];
 			}
 			
-			checkLexem(tokens, currentRawToken, cursor);
+			checkLexem(tokens, currentRawToken, cursor, i);
 
-			if(cursor != ' ' && cursor != '\n') {
+			if(!isSpace(cursor)) {
 			
 				currentRawToken.append(cursor);
 			}
@@ -77,31 +77,19 @@ public class KsdlLexer {
 			
 			if(cursor == '\n' && findShortEnd > 0) {
 				
-				tokens.add(KeyWordToken.CLOSE_BLOCK);
+				tokens.put(i, KeyWordToken.CLOSE_BLOCK);
 				findShortEnd--;
 			}
 		}
 		
-		checkLexem(tokens, currentRawToken, '\0');
+		checkLexem(tokens, currentRawToken, '\0', chars.length);
 		
 		return tokens;
 	}
-
-	private String prepareRawText(String rawText) {
-		
-		String text = rawText;
-		
-		text += " ";
-		text = text.replaceAll("\\r\\n", "\n");
-		text = text.replaceAll("	", " ");
-		text = text.replaceAll(" +", " ");
-		
-		return text;
-	}
 	
-	private boolean checkLexem(List<KsdlToken> tokens, StringBuilder currentRawToken, char cursor) {
+	private boolean checkLexem(TokenSequence tokens, StringBuilder currentRawToken, char cursor, int cursorIndex) {
 		
-		if(checkWord(tokens, currentRawToken, cursor)) return true;
+		if(checkWord(tokens, currentRawToken, cursor, cursorIndex)) return true;
 		
 		for(KsdlLexem<?> lexem : lexems) {
 			
@@ -109,7 +97,7 @@ public class KsdlLexer {
 				
 				KsdlToken token = lexem.tokenize(currentRawToken.toString());
 
-				tokens.add(token);
+				tokens.put(cursorIndex - currentRawToken.length(), token);
 				currentRawToken.setLength(0);
 				
 				return true;
@@ -119,15 +107,15 @@ public class KsdlLexer {
 		return false;
 	}
 	
-	private boolean checkWord(List<KsdlToken> tokens, StringBuilder currentRawToken, char cursor) {
+	private boolean checkWord(TokenSequence tokens, StringBuilder currentRawToken, char cursor, int cursorIndex) {
 		
 		for(KeyWordLexem word : keyWords) {
 			
-			if(word.isMatch(currentRawToken) && (!word.isRequireSpace() || (cursor == ' ' || cursor == '\n'))) {
+			if(word.isMatch(currentRawToken) && (!word.isRequireSpace() || isSpace(cursor))) {
 				
 				KsdlToken token = word.tokenize(currentRawToken.toString());
 
-				tokens.add(token);
+				tokens.put(cursorIndex - currentRawToken.length(), token);
 				currentRawToken.setLength(0);
 
 				return true;
@@ -135,6 +123,11 @@ public class KsdlLexer {
 		}
 		
 		return false;
+	}
+	
+	private boolean isSpace(char tar) {
+		
+		return tar == '\f' || tar == '\n' || tar == '\r' || tar == '\t' || tar == ' ';
 	}
 	
 	public static KsdlLexer getInstance() {

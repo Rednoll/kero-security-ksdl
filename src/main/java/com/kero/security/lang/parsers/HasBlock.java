@@ -5,15 +5,16 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.kero.security.lang.collections.TokenSequence;
+import com.kero.security.lang.exception.UnexpectedTokenException;
 import com.kero.security.lang.tokens.KeyWordToken;
 
 public interface HasBlock<U> {
 
-	public default List<U> parseBlock(TokenSequence tokens) {
+	public default List<U> parseBlock(TokenSequence tokens) throws UnexpectedTokenException {
 		
 		if(tokens.peek() != KeyWordToken.OPEN_BLOCK) return Collections.emptyList();
 		
-		tokens.poll(); // OPEN_BLOCK
+		tokens.consume(KeyWordToken.OPEN_BLOCK);
 		
 		List<U> units = new LinkedList<>();
 		
@@ -22,10 +23,10 @@ public interface HasBlock<U> {
 			units.add(parseBlockUnit(tokens));
 		}
 		
-		tokens.poll(); // CLOSE_BLOCK
+		tokens.consume(KeyWordToken.CLOSE_BLOCK);
 		
 		return units;
 	}
 	
-	public U parseBlockUnit(TokenSequence tokens);
+	public U parseBlockUnit(TokenSequence tokens) throws UnexpectedTokenException;
 }

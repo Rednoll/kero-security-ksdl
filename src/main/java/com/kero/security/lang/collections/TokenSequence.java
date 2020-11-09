@@ -1,52 +1,71 @@
 package com.kero.security.lang.collections;
 
-import java.util.Arrays;
-import java.util.LinkedList;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.TreeMap;
 
+import com.kero.security.lang.exception.UnexpectedTokenException;
 import com.kero.security.lang.tokens.KsdlToken;
 
-public class TokenSequence extends LinkedList<KsdlToken> {
+public class TokenSequence extends TreeMap<Integer, KsdlToken> {
 
 	private static final long serialVersionUID = 1L;
-
+	
+	private String script = null;
+	
 	public TokenSequence() {
 		super();
 		
 	}
 	
+	public TokenSequence(String script) {
+		this();
+		
+		this.script = script;
+	}
+	
 	public TokenSequence(TokenSequence seq) {
 		super(seq);
 		
+		this.script = seq.script;
 	}
 	
-	public TokenSequence(KsdlToken... tokens) {
-		this();
+	public KsdlToken peek() {
 		
-		this.addAll(Arrays.asList(tokens));
+		return !this.isEmpty() ? this.firstEntry().getValue() : null;
 	}
 	
-	public <T extends KsdlToken> void consume(T token) {
+	public <T extends KsdlToken> void consume(T token) throws UnexpectedTokenException {
 		
 		if(token instanceof Enum && token.getClass().getSuperclass() != Enum.class) {
 			
-			tryPoll((Class<T>) token.getClass().getSuperclass());
+			consume((Class<T>) token.getClass().getSuperclass());
 		}
 		else {
 	
-			tryPoll(token.getClass());
+			consume(token.getClass());
 		}
 	}
 	
-	public <T extends KsdlToken> T tryPoll(Class<T> clazz) {
-		
-		if(!clazz.isAssignableFrom(this.peek().getClass())) throw new RuntimeException("Incorrect token: "+clazz);
-		
-		return (T) this.poll();
+	
+	public <T extends KsdlToken> void consume(Class<T> tokenClass) throws UnexpectedTokenException {
+	
+		tryPoll(tokenClass);
 	}
 	
-	public boolean add(TokenSequence seq) {
+	public <T extends KsdlToken> T tryPoll(Class<T> clazz) throws UnexpectedTokenException {
+	
+		if(!isToken(0, clazz)) {
+			
+			if(this.size() == 0) throw new UnexpectedTokenException(this.script, -1, clazz, null);
+			
+			int position = this.firstEntry().getKey();
+			KsdlToken token = this.firstEntry().getValue();
+			
+			throw new UnexpectedTokenException(this.script, position, clazz, token.getClass());
+		}
 		
-		return this.addAll(seq);
+		return (T) pollFirstEntry().getValue();
 	}
 	
 	public <T extends KsdlToken> T tryGetOrDefault(T def) {
@@ -65,18 +84,36 @@ public class TokenSequence extends LinkedList<KsdlToken> {
 		
 		if(!isToken(0, tokenClass)) return def;
 	
-		return (T) poll();
+		return (T) pollFirstEntry().getValue();
 	}
 	
 	public boolean isToken(int index, KsdlToken token) {
 		
 		if(index >= size()) return false;
 		
-		return get(index) == token;
+		Iterator iterator = this.entrySet().iterator();
+		
+		for(int i = 0; i < index; i++) {
+			
+			iterator.next();
+		}
+
+		return ((Map.Entry) iterator.next()).getValue().equals(token);
 	}
 	
 	public boolean isToken(int index, Class<? extends KsdlToken> tokenClass) {
 		
-		return tokenClass.isAssignableFrom(get(index).getClass());
+		if(index >= size()) return false;
+		
+		Iterator iterator = this.entrySet().iterator();
+		
+		for(int i = 0; i < index; i++) {
+			
+			iterator.next();
+		}
+		
+		Class<?> currentClass = ((Map.Entry) iterator.next()).getValue().getClass();
+		
+		return tokenClass.isAssignableFrom(currentClass);
 	}
 }

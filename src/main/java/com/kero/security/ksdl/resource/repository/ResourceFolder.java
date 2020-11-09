@@ -38,6 +38,11 @@ public abstract class ResourceFolder<T> implements KsdlWritableResourceRepositor
 	protected abstract KsdlWritableResource<T> getResource(Path path);
 	
 	@Override
+	public void push() {
+		
+	}
+	
+	@Override
 	public Collection<KsdlWritableResource<T>> getAll() {
 		
 		Collection<KsdlWritableResource<T>> resources = new HashSet<>();

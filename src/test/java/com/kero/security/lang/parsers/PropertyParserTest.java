@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 
 import com.kero.security.core.access.Access;
 import com.kero.security.lang.collections.TokenSequence;
+import com.kero.security.lang.exception.UnexpectedTokenException;
 import com.kero.security.lang.nodes.DefaultAccessNode;
 import com.kero.security.lang.nodes.PropertyNode;
 import com.kero.security.lang.nodes.RoleNode;
@@ -19,24 +20,24 @@ import com.kero.security.lang.tokens.RoleToken;
 public class PropertyParserTest {
 	
 	@Test
-	public void parse() {
+	public void parse() throws UnexpectedTokenException {
 		
 		PropertyParser parser = new PropertyParser();
 		
 		TokenSequence seq = new TokenSequence();
-			seq.add(new NameToken("text"));
-			seq.add(DefaultAccessToken.GRANT);
-			seq.add(KeyWordToken.OPEN_BLOCK);
-			seq.add(new RoleToken("OWNER", true));
-			seq.add(new RoleToken("FRIEND", false));
-			seq.add(KeyWordToken.CLOSE_BLOCK);
-			seq.add(KeyWordToken.METALINE);
-			seq.add(new NameToken("propagation"));
-			seq.add(KeyWordToken.OPEN_BLOCK);
-			seq.add(new NameToken("OWNER"));
-			seq.add(KeyWordToken.TO);
-			seq.add(new NameToken("FRIEND"));
-			seq.add(KeyWordToken.CLOSE_BLOCK);
+			seq.put(0, new NameToken("text"));
+			seq.put(1, DefaultAccessToken.GRANT);
+			seq.put(2, KeyWordToken.OPEN_BLOCK);
+			seq.put(3, new RoleToken("OWNER", true));
+			seq.put(4, new RoleToken("FRIEND", false));
+			seq.put(5, KeyWordToken.CLOSE_BLOCK);
+			seq.put(6, KeyWordToken.METALINE);
+			seq.put(7, new NameToken("propagation"));
+			seq.put(8, KeyWordToken.OPEN_BLOCK);
+			seq.put(9, new NameToken("OWNER"));
+			seq.put(10, KeyWordToken.TO);
+			seq.put(11, new NameToken("FRIEND"));
+			seq.put(12, KeyWordToken.CLOSE_BLOCK);
 			
 		PropertyNode propNode = parser.parse(seq);
 		

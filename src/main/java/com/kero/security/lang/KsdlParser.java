@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.kero.security.lang.collections.RootNodeList;
 import com.kero.security.lang.collections.TokenSequence;
+import com.kero.security.lang.exception.UnexpectedTokenException;
 import com.kero.security.lang.nodes.KsdlRootNode;
 import com.kero.security.lang.parsers.BindParser;
 import com.kero.security.lang.parsers.KsdlRootNodeParser;
@@ -36,11 +37,13 @@ public class KsdlParser {
 		throw new RuntimeException("Can't parse "+obj);
 	}
 	
-	public RootNodeList parse(TokenSequence tokensArg) {
+	public RootNodeList parse(TokenSequence tokensArg) throws UnexpectedTokenException {
 		
 		TokenSequence tokens = new TokenSequence(tokensArg);
 		
 		RootNodeList roots = new RootNodeList();
+		
+		int lastSize = tokens.size();
 		
 		c2: while(!tokens.isEmpty()) {
 			
@@ -55,6 +58,13 @@ public class KsdlParser {
 					continue c2;
 				}
 			}
+			
+			if(lastSize == tokens.size()) {
+			
+				throw new RuntimeException("Unxpected token <"+tokens.firstEntry().getValue()+">");
+			}
+			
+			lastSize = tokens.size();
 		}
 		
 		return roots;

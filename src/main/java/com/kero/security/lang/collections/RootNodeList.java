@@ -22,7 +22,7 @@ public class RootNodeList extends ArrayList<KsdlRootNode> {
 		
 			forEach(root -> builder.append(root.toText()+"\n"));
 		
-		String data = builder.toString();;
+		String data = builder.toString();
 			data = data.trim();
 			data = data.replaceAll("\n{3,}", "\n\n");
 			

@@ -10,8 +10,8 @@ import com.kero.security.lang.tokens.RoleToken;
 
 public class RoleNode extends KsdlNodeBase {
 
-	private String name;
-	private Access access;
+	protected String name;
+	protected Access access;
 	
 	public RoleNode(String name, Access access) {
 		

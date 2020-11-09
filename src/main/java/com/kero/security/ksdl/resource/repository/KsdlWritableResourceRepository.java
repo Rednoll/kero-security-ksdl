@@ -5,6 +5,8 @@ import com.kero.security.ksdl.resource.additionals.ResourceAddress;
 
 public interface KsdlWritableResourceRepository<T extends KsdlWritableResource> extends KsdlResourceRepository<T> {
 
+	public void push() throws Exception;
+	
 	public T createResource(ResourceAddress address);
 	public boolean hasResource(ResourceAddress address);
 	

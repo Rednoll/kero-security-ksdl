@@ -12,7 +12,7 @@ public class PropagationMetaline extends PropertyMetalineBase {
 
 	public static TokenizeStrategy TOTEXT_STYLE = DefaultTokenizeStrategy.FULL_BRANCHES;
 	
-	private Map<String, String> propagationMap;
+	protected Map<String, String> propagationMap;
 	
 	public PropagationMetaline(Map<String, String> propagationMap) {
 		

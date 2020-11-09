@@ -9,42 +9,42 @@ import org.junit.jupiter.api.Test;
 
 import com.kero.security.lang.collections.RootNodeList;
 import com.kero.security.lang.collections.TokenSequence;
+import com.kero.security.lang.exception.UnexpectedTokenException;
 import com.kero.security.lang.nodes.PropertyNode;
 import com.kero.security.lang.nodes.SchemeNode;
 import com.kero.security.lang.nodes.metaline.PropagationMetaline;
 import com.kero.security.lang.nodes.metaline.PropertyMetalineBase;
 import com.kero.security.lang.tokens.DefaultAccessToken;
 import com.kero.security.lang.tokens.KeyWordToken;
-import com.kero.security.lang.tokens.KsdlToken;
 import com.kero.security.lang.tokens.NameToken;
 import com.kero.security.lang.tokens.RoleToken;
 
 public class KsdlParserTest {
 
 	@Test
-	public void parse() {
+	public void parse() throws UnexpectedTokenException {
 		
 		KsdlParser parser = KsdlParser.getInstance();
 	
 		TokenSequence seq = new TokenSequence();
-			seq.add(KeyWordToken.SCHEME);
-			seq.add(new NameToken("TestScheme"));
-			seq.add(DefaultAccessToken.DENY);
-			seq.add(KeyWordToken.OPEN_BLOCK);
-			seq.add(new NameToken("text"));
-			seq.add(DefaultAccessToken.GRANT);
-			seq.add(KeyWordToken.OPEN_BLOCK);
-			seq.add(new RoleToken("OWNER", true));
-			seq.add(new RoleToken("FRIEND", false));
-			seq.add(KeyWordToken.CLOSE_BLOCK);
-			seq.add(KeyWordToken.METALINE);
-			seq.add(new NameToken("propagation"));
-			seq.add(KeyWordToken.OPEN_BLOCK);
-			seq.add(new NameToken("OWNER"));
-			seq.add(KeyWordToken.TO);
-			seq.add(new NameToken("FRIEND"));
-			seq.add(KeyWordToken.CLOSE_BLOCK);
-			seq.add(KeyWordToken.CLOSE_BLOCK);
+			seq.put(0, KeyWordToken.SCHEME);
+			seq.put(1, new NameToken("TestScheme"));
+			seq.put(2, DefaultAccessToken.DENY);
+			seq.put(3, KeyWordToken.OPEN_BLOCK);
+			seq.put(4, new NameToken("text"));
+			seq.put(5, DefaultAccessToken.GRANT);
+			seq.put(6, KeyWordToken.OPEN_BLOCK);
+			seq.put(7, new RoleToken("OWNER", true));
+			seq.put(8, new RoleToken("FRIEND", false));
+			seq.put(9, KeyWordToken.CLOSE_BLOCK);
+			seq.put(10, KeyWordToken.METALINE);
+			seq.put(11, new NameToken("propagation"));
+			seq.put(12, KeyWordToken.OPEN_BLOCK);
+			seq.put(13, new NameToken("OWNER"));
+			seq.put(14, KeyWordToken.TO);
+			seq.put(15, new NameToken("FRIEND"));
+			seq.put(16, KeyWordToken.CLOSE_BLOCK);
+			seq.put(17, KeyWordToken.CLOSE_BLOCK);
 			
 		RootNodeList roots = parser.parse(seq);
 		

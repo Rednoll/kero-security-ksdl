@@ -13,6 +13,11 @@ public class WritableResourceRepositoryCacheWrap<T extends KsdlWritableResource>
 	}
 	
 	@Override
+	public void push() {
+		
+	}
+	
+	@Override
 	public T createResource(ResourceAddress address) {
 		
 		this.invalidate();

@@ -2,6 +2,7 @@ package com.kero.security.lang.parsers;
 
 import com.kero.security.core.scheme.AccessScheme;
 import com.kero.security.lang.collections.TokenSequence;
+import com.kero.security.lang.exception.UnexpectedTokenException;
 import com.kero.security.lang.nodes.BindNode;
 import com.kero.security.lang.tokens.KeyWordToken;
 import com.kero.security.lang.tokens.NameToken;
@@ -20,7 +21,7 @@ public class BindParser extends KsdlNodeParserBase<AccessScheme, BindNode> imple
 	}
 
 	@Override
-	public BindNode parse(TokenSequence tokens) {
+	public BindNode parse(TokenSequence tokens) throws UnexpectedTokenException {
 		
 		tokens.consume(KeyWordToken.BIND);
 		

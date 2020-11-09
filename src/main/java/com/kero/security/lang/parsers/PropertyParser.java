@@ -6,6 +6,7 @@ import java.util.List;
 import com.kero.security.core.access.Access;
 import com.kero.security.core.property.Property;
 import com.kero.security.lang.collections.TokenSequence;
+import com.kero.security.lang.exception.UnexpectedTokenException;
 import com.kero.security.lang.nodes.DefaultAccessNode;
 import com.kero.security.lang.nodes.PropertyNode;
 import com.kero.security.lang.nodes.RoleNode;
@@ -59,9 +60,9 @@ public class PropertyParser extends KsdlNodeParserBase<Property, PropertyNode> i
 		return new PropertyNode(name, defaultAccess, roleRules, metalines);
 	}
 	
-	public PropertyNode parse(TokenSequence tokens) {
+	public PropertyNode parse(TokenSequence tokens) throws UnexpectedTokenException {
 		
-		NameToken nameToken = (NameToken) tokens.poll();
+		NameToken nameToken = tokens.tryPoll(NameToken.class);
 		
 		DefaultAccessToken defaultRuleToken = tokens.tryGetOrDefault(DefaultAccessToken.EMPTY);
 		
@@ -90,8 +91,8 @@ public class PropertyParser extends KsdlNodeParserBase<Property, PropertyNode> i
 	}
 	
 	@Override
-	public RoleToken parseBlockUnit(TokenSequence tokens) {
+	public RoleToken parseBlockUnit(TokenSequence tokens) throws UnexpectedTokenException {
 		
-		return (RoleToken) tokens.poll();
+		return tokens.tryPoll(RoleToken.class);
 	}
 }

@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
 
 import com.kero.security.lang.collections.TokenSequence;
+import com.kero.security.lang.exception.UnexpectedTokenException;
 import com.kero.security.lang.nodes.DefaultAccessNode;
 import com.kero.security.lang.nodes.SchemeNode;
 import com.kero.security.lang.tokens.DefaultAccessToken;
@@ -21,14 +22,14 @@ public class SchemeParserTest {
 		SchemeParser parser = new SchemeParser();
 		
 		TokenSequence seq = new TokenSequence();
-			seq.add(KeyWordToken.SCHEME);
-			seq.add(new NameToken("TestScheme"));
+			seq.put(0, KeyWordToken.SCHEME);
+			seq.put(1, new NameToken("TestScheme"));
 		
 		assertTrue(parser.isMatch(seq));
 		
 		seq = new TokenSequence();
-			seq.add(KeyWordToken.OPEN_BLOCK);
-			seq.add(KeyWordToken.SCHEME);
+			seq.put(0, KeyWordToken.OPEN_BLOCK);
+			seq.put(1, KeyWordToken.SCHEME);
 			
 		assertFalse(parser.isMatch(seq));
 		
@@ -37,16 +38,16 @@ public class SchemeParserTest {
 	}
 	
 	@Test
-	public void parse() {
+	public void parse() throws UnexpectedTokenException {
 		
 		SchemeParser parser = new SchemeParser();
 		
 		TokenSequence seq = new TokenSequence();
-			seq.add(KeyWordToken.SCHEME);
-			seq.add(new NameToken("TestScheme"));
-			seq.add(DefaultAccessToken.DENY);
-			seq.add(KeyWordToken.OPEN_BLOCK);
-			seq.add(KeyWordToken.CLOSE_BLOCK);
+			seq.put(0, KeyWordToken.SCHEME);
+			seq.put(1, new NameToken("TestScheme"));
+			seq.put(2, DefaultAccessToken.DENY);
+			seq.put(3, KeyWordToken.OPEN_BLOCK);
+			seq.put(4, KeyWordToken.CLOSE_BLOCK);
 			
 		SchemeNode schemeNode = parser.parse(seq);
 		

@@ -5,8 +5,8 @@ import java.util.Map;
 
 import com.kero.security.core.property.Property;
 import com.kero.security.lang.collections.TokenSequence;
+import com.kero.security.lang.exception.UnexpectedTokenException;
 import com.kero.security.lang.nodes.metaline.PropagationMetaline;
-import com.kero.security.lang.parsers.exceptions.KsdlParseException;
 import com.kero.security.lang.tokens.KeyWordToken;
 import com.kero.security.lang.tokens.NameToken;
 
@@ -48,10 +48,10 @@ public class PropagationParser extends MetalineParserBase<Property, PropagationM
 	}
 	
 	@Override
-	public PropagationMetaline parse(TokenSequence tokens) {
+	public PropagationMetaline parse(TokenSequence tokens) throws UnexpectedTokenException {
 		
 		tokens.consume(KeyWordToken.METALINE);
-		tokens.poll(); // propagation (name)
+		tokens.consume(NameToken.class);
 		tokens.consume(KeyWordToken.OPEN_BLOCK);
 		
 		NameToken fromRoleName = tokens.tryPoll(NameToken.class);
@@ -69,7 +69,7 @@ public class PropagationParser extends MetalineParserBase<Property, PropagationM
 			fromRoleName = toRoleName;
 		}
 		
-		tokens.poll();
+		tokens.consume(KeyWordToken.CLOSE_BLOCK);
 		
 		return new PropagationMetaline(propagationMap);
 	}

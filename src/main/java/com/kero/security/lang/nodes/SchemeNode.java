@@ -15,13 +15,13 @@ public class SchemeNode extends KsdlNodeBase implements KsdlRootNode {
 
 	public static final SchemeNode EMPTY = new Empty();
 	
-	private String name;
+	protected String name;
 	
-	private String parentName;
+	protected String parentName;
 	
-	private DefaultAccessNode defaultAccess;
+	protected DefaultAccessNode defaultAccess;
 	
-	private List<PropertyNode> properties;
+	protected List<PropertyNode> properties;
 	
 	public SchemeNode(String name, String parentName, DefaultAccessNode defaultAccess, List<PropertyNode> properties) {
 		
