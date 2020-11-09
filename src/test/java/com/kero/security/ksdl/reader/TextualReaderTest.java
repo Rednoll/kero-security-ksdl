@@ -22,7 +22,7 @@ public class TextualReaderTest {
 	public void getContent() {
 		
 		String data = "scheme TestScheme(D) {\n"
-				+ "text(G): OWNER -FRIEND\n"
+				+ "text(G): +OWNER -FRIEND\n"
 				+ "- propagation: OWNER -> FRIEND\n"
 				+ "}";
 		
