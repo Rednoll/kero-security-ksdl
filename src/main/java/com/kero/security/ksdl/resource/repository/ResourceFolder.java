@@ -9,13 +9,17 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.Matcher;
 
-import com.kero.security.ksdl.resource.FileResource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.kero.security.ksdl.resource.KsdlWritableResource;
 import com.kero.security.ksdl.resource.additionals.ResourceAddress;
 import com.kero.security.ksdl.resource.exception.FileResourceIOException;
 
 public abstract class ResourceFolder<T> implements KsdlWritableResourceRepository<KsdlWritableResource<T>> {
 
+	private static Logger LOGGER = LoggerFactory.getLogger("Kero-Security-KSDL");
+	
 	protected Path path;
 	protected Set<String> suffixes;
 	
@@ -53,6 +57,8 @@ public abstract class ResourceFolder<T> implements KsdlWritableResourceRepositor
 				 
 				if(isSuitable(sub)) {
 	
+					LOGGER.debug("Found KSDL file: "+sub);
+					
 					resources.add(getResource(sub));
 				}
 			});

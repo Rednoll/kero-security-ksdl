@@ -13,9 +13,9 @@ import com.kero.security.lang.exception.UnexpectedTokenException;
 
 public class TextualReader extends KsdlReaderBase {
 
-	private KsdlResourceRepository<KsdlResource<String>> repository;
+	private KsdlResourceRepository<? extends KsdlResource<String>> repository;
 	
-	public TextualReader(KsdlResourceRepository<KsdlResource<String>> repository) {
+	public TextualReader(KsdlResourceRepository<? extends KsdlResource<String>> repository) {
 	
 		this.repository = repository;
 	}
