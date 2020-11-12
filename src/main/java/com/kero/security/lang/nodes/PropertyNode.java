@@ -46,9 +46,9 @@ public class PropertyNode extends KsdlNodeBase {
 				builder.append(":");
 				
 				roleRules.forEach(roleRule -> builder.append(" "+roleRule.toText()));
-				
-				builder.append("\n");
 			}
+			
+			builder.append("\n");
 			
 			StringBuilder metalinesBuilder = new StringBuilder();
 			
