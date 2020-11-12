@@ -46,7 +46,7 @@ public class SchemeNode extends KsdlNodeBase implements KsdlRootNode {
 		
 			builder.append(this.defaultAccess.toText());
 			
-			if(parentName != null && parentName.isEmpty()) {
+			if(parentName != null && !parentName.isEmpty()) {
 				
 				builder.append("extends "+this.parentName);
 			}
