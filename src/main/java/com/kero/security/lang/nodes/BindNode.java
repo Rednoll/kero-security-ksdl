@@ -38,4 +38,14 @@ public class BindNode extends KsdlNodeBase implements KsdlRootNode {
 			
 		return builder.toString();
 	}
+	
+	public String getName() {
+		
+		return this.name;
+	}
+	
+	public String getClassName() {
+		
+		return this.className;
+	}
 }
