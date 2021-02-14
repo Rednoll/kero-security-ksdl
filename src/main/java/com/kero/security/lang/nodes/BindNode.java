@@ -1,5 +1,7 @@
 package com.kero.security.lang.nodes;
 
+import com.kero.security.core.agent.KeroAccessAgent;
+
 public class BindNode extends KsdlNodeBase implements KsdlRootNode {
 
 	protected String name;
@@ -9,6 +11,20 @@ public class BindNode extends KsdlNodeBase implements KsdlRootNode {
 		
 		this.name = name;
 		this.className = className;
+	}
+	
+	public void interpret(KeroAccessAgent manager) {
+		
+		try {
+			
+			Class<?> type = Class.forName(this.className);
+		
+			manager.setTypeName(this.name, type);
+		}
+		catch(ClassNotFoundException e) {
+			
+			e.printStackTrace();
+		}
 	}
 	
 	@Override

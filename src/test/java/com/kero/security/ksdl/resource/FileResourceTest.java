@@ -12,7 +12,6 @@ import org.junit.jupiter.api.Test;
 
 import com.google.common.jimfs.Configuration;
 import com.google.common.jimfs.Jimfs;
-import com.kero.security.ksdl.resource.FileTextResource;
 
 public class FileResourceTest {
 
@@ -25,26 +24,8 @@ public class FileResourceTest {
 		
 		Files.write(file, "test".getBytes(), StandardOpenOption.CREATE_NEW);
 
-		FileTextResource resource = new FileTextResource(fileSystem.getPath("/"), file);
+		FileResource resource = new FileResource(file);
 		
-		assertEquals(resource.readData(), "test");
-	}
-	
-	@Test
-	public void getAdddress() throws IOException {
-		
-		FileSystem fileSystem = Jimfs.newFileSystem(Configuration.unix());
-		
-		Path root = fileSystem.getPath("/root");
-		Files.createDirectory(root);
-		
-		Files.createDirectory(fileSystem.getPath("/root/sub"));
-		
-		Path file = fileSystem.getPath("/root/sub/file1.k-s");
-		Files.createFile(file);
-		
-		FileTextResource resource = new FileTextResource(root, file);
-		
-		assertEquals(resource.getAddress().getRaw(), "sub.file1");
+		assertEquals(resource.read(), "test");
 	}
 }

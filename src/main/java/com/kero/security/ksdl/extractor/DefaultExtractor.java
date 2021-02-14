@@ -1,5 +1,9 @@
 package com.kero.security.ksdl.extractor;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -8,15 +12,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Matcher;
 import java.util.stream.Collectors;
 
 import com.kero.security.core.agent.KeroAccessAgent;
 import com.kero.security.core.scheme.AccessScheme;
 import com.kero.security.core.scheme.storage.AccessSchemeStorage;
-import com.kero.security.ksdl.resource.additionals.ResourceAddress;
-import com.kero.security.ksdl.script.BaseKsdlScript;
-import com.kero.security.ksdl.script.KsdlScript;
-import com.kero.security.ksdl.script.ScriptList;
 import com.kero.security.lang.KsdlParser;
 import com.kero.security.lang.collections.RootNodeList;
 import com.kero.security.lang.nodes.BindNode;
@@ -26,43 +27,59 @@ public class DefaultExtractor implements KsdlExtractor {
 
 	private Set<String> boilerplatePackages = new HashSet<>();
 	
-	public DefaultExtractor() {
+	private Path rootFolder;
+	
+	public DefaultExtractor(Path rootFolder) {
+		
+		this.rootFolder = rootFolder;
 		
 		this.boilerplatePackages.add("impl");
 	}
 	
 	@Override
-	public ScriptList extractFrom(KeroAccessAgent agent) {
-	
+	public void extractFrom(KeroAccessAgent agent) throws IOException {
+		
 		AccessSchemeStorage storage = agent.getSchemeStorage();
 		Set<AccessScheme> schemes = new HashSet<>(storage.values());
 
 		Map<String, Set<AccessScheme>> packages = buildPackageRepresentations(schemes);
 
-		ScriptList result = new ScriptList();
-		
-			packages.forEach((packageName, packageSchemes)-> {
+		packages.forEach((packageName, packageSchemes)-> {
+			
+			Map<AccessScheme, List<AccessScheme>> packs = splitToPacksByRoots(packageSchemes);
+			
+			packs.forEach((rootScheme, packSchemes)-> {
 				
-				Map<AccessScheme, List<AccessScheme>> packs = splitToPacksByRoots(packageSchemes);
+				String packName = rootScheme.getName();
+				String address = packageName + this.rootFolder.getFileSystem().getSeparator() + packName + ".k-s";
 				
-				packs.forEach((rootScheme, packSchemes)-> {
+				Path path = this.rootFolder.resolve(address);
+				
+				RootNodeList list = createScript(rootScheme, packSchemes);
+				
+				try {
+				
+					if(!Files.exists(path.getParent())) {
+						
+						Files.createDirectories(path.getParent());
+					}
 					
-					String packName = rootScheme.getName();
-					String address = packageName + ResourceAddress.SEPARATOR + packName;
+					Files.write(path, list.toText().getBytes(), StandardOpenOption.WRITE, StandardOpenOption.CREATE_NEW);
+				}
+				catch(IOException e) {
 					
-					result.add(createScript(new ResourceAddress(address), rootScheme, packSchemes));
-				});
+					e.printStackTrace();
+				}
 			});
-		
-		return result;
+		});
 	}
 	
-	protected KsdlScript createScript(ResourceAddress address, AccessScheme rootScheme, List<AccessScheme> schemes) {
+	protected RootNodeList createScript(AccessScheme rootScheme, List<AccessScheme> schemes) {
 		
-		return createScriptBindDown(address, rootScheme, schemes);
+		return createScriptBindDown(rootScheme, schemes);
 	}
 	
-	protected KsdlScript createScriptRound(ResourceAddress address, AccessScheme rootScheme, List<AccessScheme> schemes) {
+	protected RootNodeList createScriptRound(AccessScheme rootScheme, List<AccessScheme> schemes) {
 		
 		schemes = new ArrayList<>(schemes);
 		
@@ -87,10 +104,10 @@ public class DefaultExtractor implements KsdlExtractor {
 				content.add(KsdlParser.getInstance().parse(scheme, BindNode.class));
 			}
 			
-		return new BaseKsdlScript(address, content);
+		return content;
 	}
 	
-	protected KsdlScript createScriptBindDown(ResourceAddress address, AccessScheme rootScheme, List<AccessScheme> schemes) {
+	protected RootNodeList createScriptBindDown(AccessScheme rootScheme, List<AccessScheme> schemes) {
 		
 		schemes = new ArrayList<>(schemes);
 		
@@ -111,11 +128,11 @@ public class DefaultExtractor implements KsdlExtractor {
 		
 			schemes.forEach(scheme -> content.add(KsdlParser.getInstance().parse(scheme, SchemeNode.class)));
 			schemes.forEach(scheme -> content.add(KsdlParser.getInstance().parse(scheme, BindNode.class)));
-			
-		return new BaseKsdlScript(address, content);
+
+		return content;
 	}
 	
-	protected KsdlScript createScriptBindUp(ResourceAddress address, AccessScheme rootScheme, List<AccessScheme> schemes) {
+	protected RootNodeList createScriptBindUp(AccessScheme rootScheme, List<AccessScheme> schemes) {
 		
 		schemes = new ArrayList<>(schemes);
 		
@@ -133,11 +150,11 @@ public class DefaultExtractor implements KsdlExtractor {
 		});
 		
 		RootNodeList content = new RootNodeList();
-		
+
 			schemes.forEach(scheme -> content.add(KsdlParser.getInstance().parse(scheme, BindNode.class)));
 			schemes.forEach(scheme -> content.add(KsdlParser.getInstance().parse(scheme, SchemeNode.class)));
 			
-		return new BaseKsdlScript(address, content);
+		return content;
 	}
 	
 	protected int calcDistance(AccessScheme parent, AccessScheme scheme) {
@@ -165,8 +182,10 @@ public class DefaultExtractor implements KsdlExtractor {
 			Package typePackage = typeClass.getPackage();
 			String packageName = removeBoilerplate(typePackage.getName());
 			
-			representation.putIfAbsent(packageName, new HashSet<>());
+			packageName = packageName.replaceAll("\\.", Matcher.quoteReplacement(this.rootFolder.getFileSystem().getSeparator()));
 			
+			representation.putIfAbsent(packageName, new HashSet<>());
+	
 			representation.get(packageName).add(scheme);
 		});
 		

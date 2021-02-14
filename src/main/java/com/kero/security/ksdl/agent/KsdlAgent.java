@@ -1,10 +1,8 @@
 package com.kero.security.ksdl.agent;
 
-import com.kero.security.ksdl.reader.KsdlReader;
+import com.kero.security.ksdl.resource.KsdlResource;
 
 public interface KsdlAgent {
-
-	public void preloadMainReader();
 	
-	public void addReader(KsdlReader provider);
+	public void addResource(KsdlResource resource);
 }

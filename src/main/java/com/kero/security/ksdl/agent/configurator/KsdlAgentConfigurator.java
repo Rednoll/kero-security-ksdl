@@ -1,4 +1,4 @@
-package com.kero.security.ksdl.agent.configuration;
+package com.kero.security.ksdl.agent.configurator;
 
 import com.kero.security.ksdl.agent.KsdlAgent;
 

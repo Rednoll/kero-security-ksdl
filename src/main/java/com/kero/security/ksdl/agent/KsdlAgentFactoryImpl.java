@@ -7,8 +7,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.kero.security.core.agent.KeroAccessAgent;
-import com.kero.security.ksdl.agent.configuration.KsdlAgentConfigurator;
-import com.kero.security.ksdl.reader.CompositeReader;
+import com.kero.security.ksdl.agent.configurator.KsdlAgentConfigurator;
+import com.kero.security.ksdl.resource.KsdlCompositeResource;
 
 public class KsdlAgentFactoryImpl implements KsdlAgentFactory {
 
@@ -21,9 +21,9 @@ public class KsdlAgentFactoryImpl implements KsdlAgentFactory {
 	}
 	
 	@Override
-	public KsdlAgent create(KeroAccessAgent accessAgent, CompositeReader mainProvider) {
+	public KsdlAgent create(KeroAccessAgent accessAgent, KsdlCompositeResource mainResource) {
 		
-		KsdlAgent agent = new KsdlAgentImpl(accessAgent, mainProvider);
+		KsdlAgent agent = new KsdlAgentImpl(accessAgent, mainResource);
 		
 		for(KsdlAgentConfigurator conf : configurators) {
 			
