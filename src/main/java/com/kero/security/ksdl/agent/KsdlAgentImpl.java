@@ -10,7 +10,6 @@ import com.kero.security.lang.KsdlParser;
 import com.kero.security.lang.collections.RootNodeList;
 import com.kero.security.lang.collections.SchemeNodeMap;
 import com.kero.security.lang.collections.TokenSequence;
-import com.kero.security.lang.exception.UnexpectedTokenException;
 
 public class KsdlAgentImpl implements KsdlAgent {
 	
@@ -31,19 +30,26 @@ public class KsdlAgentImpl implements KsdlAgent {
 		this.mainResource = mainResource;
 	}
 	
-	public void init() throws UnexpectedTokenException {
+	public void init() {
 		
-		if(this.initialized) throw new RuntimeException("KsdlAgent already initialized!");
+		try {
 
-		String rawData = this.mainResource.read();
-		
-		TokenSequence tokens = KsdlLexer.getInstance().tokenize(rawData);
-		RootNodeList nodes = KsdlParser.getInstance().parse(tokens);
-		SchemeNodeMap schemes = nodes.getSchemeNodes();
-		
-		this.accessAgent.addConfigurator(new KsdlAccessSchemeConfigurator(schemes));
-		
-		this.initialized = true;
+			if(this.initialized) throw new RuntimeException("KsdlAgent already initialized!");
+	
+			String rawData = this.mainResource.read();
+			
+			TokenSequence tokens = KsdlLexer.getInstance().tokenize(rawData);
+			RootNodeList nodes = KsdlParser.getInstance().parse(tokens);
+			SchemeNodeMap schemes = nodes.getSchemeNodes();
+			
+			this.accessAgent.addConfigurator(new KsdlAccessSchemeConfigurator(schemes));
+			
+			this.initialized = true;
+		}
+		catch(Exception e) {
+			
+			throw new RuntimeException(e);
+		}
 	}
 	
 	@Override
